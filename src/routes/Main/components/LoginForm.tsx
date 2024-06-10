@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
+import { useAuth } from "@/contexts/AuthContext";
+
 export const schema = z.object({
   email: z.string().email("Enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters long"),
@@ -23,7 +25,7 @@ export const schema = z.object({
 
 export default function LoginForm() {
   const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
+  const { handleLogin } = useAuth();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -32,17 +34,29 @@ export default function LoginForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof schema>) {
-    setLoading(true);
+  const [loading, setLoading] = useState(false);
 
+  // * Login users with form values and simulating a asynchronous function
+  async function onSubmit(values: z.infer<typeof schema>) {
     try {
-      // Login
+      setLoading(true);
+      await handleLogin({
+        email: values.email,
+        password: values.password,
+      });
+
+      setTimeout(() => {
+        toast({
+          title: "Login successful. ✅",
+        });
+        form.reset();
+        setLoading(false);
+      }, 1000);
     } catch (error) {
       toast({
-        title: "Oops!",
-        description: "Something went wrong during the sign-in process.",
+        title: "Ooops! ❌",
+        description: String(error),
       });
-    } finally {
       setLoading(false);
     }
   }

@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 import {
   Form,
@@ -14,8 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
 
 export const schema = z
   .object({
@@ -29,9 +29,8 @@ export const schema = z
   });
 
 export default function SignUpForm() {
-  const [loading, setLoading] = useState(false);
-
   const { toast } = useToast();
+  const { handleSignUp } = useAuth();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -41,16 +40,31 @@ export default function SignUpForm() {
     },
   });
 
+  const [loading, setLoading] = useState(false);
+
+  // * Create a new users with a form and simulating a asynchronous function
   async function onSubmit(values: z.infer<typeof schema>) {
-    setLoading(true);
     try {
-      // Create User
+      setLoading(true);
+      await handleSignUp({
+        email: values.email,
+        password: values.password,
+        contacts: [],
+      });
+
+      setTimeout(() => {
+        toast({
+          title: "Account created! ✅",
+          description: "Please log in to continue with your credentials",
+        });
+        form.reset();
+        setLoading(false);
+      }, 1000);
     } catch (error) {
       toast({
-        title: "Oops!",
-        description: "Something went wrong during the sign-up process.",
+        title: "Ooops! ❌",
+        description: String(error),
       });
-    } finally {
       setLoading(false);
     }
   }
