@@ -11,7 +11,7 @@ import { Button } from "./ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Header() {
-  const { handleSignOut, currentUser } = useAuth();
+  const { handleSignOut, handleDeleteAccount, currentUser } = useAuth();
 
   return (
     <header className="bg-white h-[6vh] px-8 flex flex-row items-center justify-end shadow-sm ">
@@ -25,8 +25,14 @@ export default function Header() {
           <DropdownMenuContent className="mr-8 mt-4">
             <DropdownMenuLabel>Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSignOut} className="text-red-500">
+            <DropdownMenuItem onClick={handleSignOut}>
               Sign Out
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={handleDeleteAccount}
+              className="text-red-500"
+            >
+              Delete account
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

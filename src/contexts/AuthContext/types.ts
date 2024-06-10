@@ -15,6 +15,7 @@ interface AuthContextHandles {
   handleSignUp: (newUser: User) => void;
   handleLogin: (credentials: UserCredentials) => void;
   handleSignOut: () => void;
+  handleDeleteAccount: () => void;
 }
 
 export type AuthContextType = AuthContextValues & AuthContextHandles;

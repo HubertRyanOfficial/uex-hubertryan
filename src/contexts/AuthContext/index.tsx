@@ -75,13 +75,29 @@ export function AuthProvider({ children }: AuthContextProps) {
   // * Sign out user cleaning persisted current user data
   const handleSignOut = () => clearCurrentUser();
 
+  // * Deleting account from persisted data and signing out current user
+  const handleDeleteAccount = useCallback(() => {
+    const currentUserIndex = users.findIndex(
+      (user) => user.email === currentUser?.email
+    );
+    const newUsersList = users.filter((_, i) => i !== currentUserIndex);
+    setUsers(newUsersList);
+    clearCurrentUser();
+  }, [currentUser, users, clearCurrentUser]);
+
   useEffect(() => {
     handleListenUser();
   }, [currentUser, handleListenUser]);
 
   return (
     <AuthContext.Provider
-      value={{ currentUser, handleSignUp, handleLogin, handleSignOut }}
+      value={{
+        currentUser,
+        handleSignUp,
+        handleLogin,
+        handleSignOut,
+        handleDeleteAccount,
+      }}
     >
       {!loading ? children : null}
     </AuthContext.Provider>
