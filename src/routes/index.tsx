@@ -1,6 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 
-import { UserProvider } from "@/contexts/UserContext";
+import { Toaster } from "@/components/ui/toaster";
+
+import { AuthProvider } from "@/contexts/AuthContext";
 import { DashboardProvider } from "@/contexts/DashboardContext";
 
 import Main from "./Main";
@@ -8,14 +10,15 @@ import Dashboard from "./Dashboard";
 
 function Root() {
   return (
-    <UserProvider>
+    <AuthProvider>
       <DashboardProvider>
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
+        <Toaster />
       </DashboardProvider>
-    </UserProvider>
+    </AuthProvider>
   );
 }
 

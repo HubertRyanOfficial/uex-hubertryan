@@ -6,22 +6,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { auth } from "@/lib/firebase-config";
 import { useCallback } from "react";
-import { signOut } from "firebase/auth";
 import { Button } from "./ui/button";
 
 export default function Header() {
-  const handleSignOut = useCallback(async () => {
-    await signOut(auth);
-  }, []);
+  const handleSignOut = useCallback(async () => {}, []);
 
   return (
     <header className="bg-white h-[6vh] px-8 flex flex-row items-center justify-end shadow-sm ">
       <div className="flex items-center">
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button variant="outline">{auth.currentUser?.email}</Button>
+            <Button variant="outline">hubertryanofficial@gmail.com</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="mr-8 mt-4">
             <DropdownMenuLabel>Account</DropdownMenuLabel>

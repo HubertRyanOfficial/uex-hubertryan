@@ -1,5 +1,5 @@
 {
-  "name": "faz_pay",
+  "name": "uex-huberryan",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -28,7 +28,6 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
-    "firebase": "^10.8.1",
     "history": "^5.3.0",
     "localforage": "^1.10.0",
     "lucide-react": "^0.344.0",

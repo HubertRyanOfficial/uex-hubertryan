@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,10 +15,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebase-config";
-import { useState } from "react";
 
 export const schema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -39,7 +36,7 @@ export default function LoginForm() {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, values.email, values.password);
+      // Login
     } catch (error) {
       toast({
         title: "Oops!",
@@ -53,7 +50,7 @@ export default function LoginForm() {
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="email"

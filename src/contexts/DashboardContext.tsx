@@ -7,7 +7,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { Toaster } from "@/components/ui/toaster";
 import type { Product } from "@/services/types";
 import { getProducts } from "@/services/products";
 
@@ -46,7 +45,6 @@ export function DashboardProvider({ children }: DashboardContextProps) {
       value={{ products, loading, refreshProduct: handleGetProducts }}
     >
       {children}
-      <Toaster />
     </DashboardContext.Provider>
   );
 }
