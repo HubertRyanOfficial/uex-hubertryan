@@ -18,15 +18,12 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 
 import type { ContactAddress } from "./types";
 
 import { getCepInfo, getCities, getStates } from "@/services/address";
 import type { Cep, Districits, State } from "@/services/address/types";
-import { Calendar } from "lucide-react";
 
 interface Props {
   value: ContactAddress & { debouncedCep: string };
@@ -127,7 +124,7 @@ function ContactAddressForm({ value, onChange }: Props) {
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Suggestions">
               <CommandItem>
-                <span>Calendar</span>
+                <span>Rua Pasteur 463, Curitiba, Paraná BR</span>
               </CommandItem>
             </CommandGroup>
           </CommandList>
