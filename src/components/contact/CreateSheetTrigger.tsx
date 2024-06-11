@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
+import { useDebounce } from "@uidotdev/usehooks";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -11,7 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import ContactInfoForm from "./ContactInfoForm";
-import ContactAddressForm from "./ContanctAddressForm";
+import ContactAddressForm from "./ContactAddressForm";
 
 import { ContactAddress, ContactInfo } from "./types";
 
@@ -21,33 +22,49 @@ interface Props {
 
 export function CreateSheetTrigger({ children }: Props) {
   const [open, setOpen] = useState(false);
+
   const [contactInfo, setContactInfo] = useState({
     name: "",
     cpf: "",
     phone: "",
   });
-
   const [contactAddress, setContactAddress] = useState({
-    cep: "",
+    uf: "",
+    city: "",
+    address: "",
   });
+  const [cep, setCep] = useState("");
+  const debouncedCep = useDebounce(cep, 400);
 
-  const handleContactInfo = (name: keyof ContactInfo, value: string) => {
-    setContactInfo((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-  };
+  const handleContactInfo = useCallback(
+    (name: keyof ContactInfo, value: string) => {
+      setContactInfo((prev) => {
+        return {
+          ...prev,
+          [name]: value,
+        };
+      });
+    },
+    []
+  );
 
-  const handleContactAddress = (name: keyof ContactAddress, value: string) => {
-    setContactAddress((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-  };
+  const handleContactAddress = useCallback(
+    (name: keyof ContactAddress, value: string) => {
+      if (name === "cep") {
+        const formatedCep = value.replace(/[.\- ]/g, "");
+        setCep(formatedCep);
+        return;
+      }
+
+      setContactAddress((prev) => {
+        return {
+          ...prev,
+          [name]: value,
+        };
+      });
+    },
+    []
+  );
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -61,7 +78,7 @@ export function CreateSheetTrigger({ children }: Props) {
         </SheetHeader>
         <ContactInfoForm value={contactInfo} onChange={handleContactInfo} />
         <ContactAddressForm
-          value={contactAddress}
+          value={{ ...contactAddress, cep, debouncedCep }}
           onChange={handleContactAddress}
         />
         <SheetFooter>

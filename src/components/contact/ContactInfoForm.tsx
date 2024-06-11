@@ -8,7 +8,7 @@ interface Props {
   onChange: (name: keyof ContactInfo, value: string) => void;
 }
 
-export default function ContactInfoForm({ value, onChange }: Props) {
+function ContactInfoForm({ value, onChange }: Props) {
   return (
     <div className="grid gap-4 py-4">
       <div className="grid grid-cols-4 items-center gap-4">
@@ -50,3 +50,5 @@ export default function ContactInfoForm({ value, onChange }: Props) {
     </div>
   );
 }
+
+export default ContactInfoForm;

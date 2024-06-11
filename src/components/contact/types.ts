@@ -5,4 +5,7 @@ export interface ContactInfo {
 }
 export interface ContactAddress {
   cep: string;
+  uf: string;
+  city: string;
+  address: string;
 }
