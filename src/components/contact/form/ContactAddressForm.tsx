@@ -1,8 +1,8 @@
 import { memo, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
+import { Label } from "../../ui/label";
+import { Input } from "../../ui/input";
 
 import {
   Select,

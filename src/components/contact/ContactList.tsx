@@ -35,9 +35,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CreateSheetTrigger } from "./CreateSheetTrigger";
+import { CreateSheetTrigger } from "./form/CreateSheetTrigger";
 
-import EditDropdown from "./EditDropdown";
+import EditDropdown from "./form/EditDropdown";
 
 export default function ContentsList() {
   const [sorting, setSorting] = React.useState<SortingState>([]);
