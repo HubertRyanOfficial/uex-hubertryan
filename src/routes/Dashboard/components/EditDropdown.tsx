@@ -13,7 +13,6 @@ import { DialogTrigger } from "@/components/ui/dialog";
 
 import { useCallback, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { useDashboard } from "@/contexts/DashboardContext";
 
 interface Props {
   product: any;

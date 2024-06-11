@@ -35,14 +35,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CreateDialogTrigger } from "./CreateDialogTrigger";
+import { CreateSheetTrigger } from "./CreateSheetTrigger";
 
 import EditDropdown from "./EditDropdown";
-import { useDashboard } from "@/contexts/DashboardContext";
 
 export default function ContentsList() {
-  const { products: data } = useDashboard();
-
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -52,7 +49,7 @@ export default function ContentsList() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data,
+    data: [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -82,11 +79,11 @@ export default function ContentsList() {
           className="lg:max-w-sm w-full"
         />
         <div className="flex justify-between mt-4 lg:mt-0 lg:justify-end max-[1024px]:w-full max-[400px]:flex-col">
-          <CreateDialogTrigger>
+          <CreateSheetTrigger>
             <Button className="mr-2 max-[400px]:mr-0">
               Create a new contact <PlusIcon className="ml-2 h-4 w-4" />
             </Button>
-          </CreateDialogTrigger>
+          </CreateSheetTrigger>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="max-[400px]:mt-2">

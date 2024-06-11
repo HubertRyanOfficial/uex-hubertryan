@@ -21,12 +21,10 @@ export function AuthProvider({ children }: AuthContextProps) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [users, setUsers, clearUsers] = usePersist<User[]>("uex-users", []);
+  const [users, setUsers] = usePersist<User[]>("uex-users", []);
   const [currentUser, setCurrentUser, clearCurrentUser] =
     usePersist<User | null>("uex-current-user", null);
   const [loading, setLoading] = useState(true);
-
-  console.log(users);
 
   // * Listening if an user is connected or not in the service and redirecting to the correct route
   const handleListenUser = useCallback(async () => {
@@ -53,7 +51,7 @@ export function AuthProvider({ children }: AuthContextProps) {
     [users]
   );
 
-  // * Log in the user in the service with e-mail and password
+  // Log in the user in the service with e-mail and password
   const handleLogin = useCallback(
     async (credentials: UserCredentials) => {
       const findUserWithEmail = users.find(
@@ -72,10 +70,10 @@ export function AuthProvider({ children }: AuthContextProps) {
     [users]
   );
 
-  // * Sign out user cleaning persisted current user data
+  // Sign out user cleaning persisted current user data
   const handleSignOut = () => clearCurrentUser();
 
-  // * Deleting account from persisted data and signing out current user
+  // Deleting account from persisted data and signing out current user
   const handleDeleteAccount = useCallback(() => {
     const currentUserIndex = users.findIndex(
       (user) => user.email === currentUser?.email
