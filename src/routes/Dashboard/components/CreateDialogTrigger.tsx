@@ -12,7 +12,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { useDashboard } from "@/contexts/DashboardContext";
-import { postProduct } from "@/services/products";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useCallback, useState } from "react";
 
@@ -22,7 +21,7 @@ interface Props {
 
 export function CreateDialogTrigger({ children }: Props) {
   const { toast } = useToast();
-  const { refreshProduct } = useDashboard();
+  // const { refreshProduct } = useDashboard();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -33,8 +32,6 @@ export function CreateDialogTrigger({ children }: Props) {
     setLoading(true);
 
     try {
-      await postProduct({ name, price });
-      await refreshProduct();
       toast({
         title: "Product created",
         description: "Your new product was added to product list.",
@@ -57,9 +54,9 @@ export function CreateDialogTrigger({ children }: Props) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Create product</DialogTitle>
+          <DialogTitle>Create contact</DialogTitle>
           <DialogDescription>
-            Create your new procut here. Click save when you're done.
+            Create your new contact here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">

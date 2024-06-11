@@ -11,19 +11,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import { useDashboard } from "@/contexts/DashboardContext";
-import { putProduct } from "@/services/products";
-import type { Product } from "@/services/types";
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { useCallback, useState } from "react";
 
 interface Props {
   children: React.ReactNode;
-  product: Product;
+  product: any;
 }
 
 function EditDialogTrigger({ children, product }: Props) {
   const { toast } = useToast();
-  const { refreshProduct } = useDashboard();
+  // const { refreshProduct } = useDashboard();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -34,8 +32,8 @@ function EditDialogTrigger({ children, product }: Props) {
     setLoading(true);
 
     try {
-      await putProduct(product.id, { name, price });
-      await refreshProduct();
+      // await putProduct(product.id, { name, price });
+      // await refreshProduct();
       toast({
         title: "Product edited",
         description: "Your  product was edited.",

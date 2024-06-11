@@ -16,6 +16,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import dayjs from "dayjs";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -36,11 +37,8 @@ import {
 } from "@/components/ui/table";
 import { CreateDialogTrigger } from "./CreateDialogTrigger";
 
-import { useDashboard } from "@/contexts/DashboardContext";
-
-import dayjs from "dayjs";
 import EditDropdown from "./EditDropdown";
-import { Product } from "@/services/types";
+import { useDashboard } from "@/contexts/DashboardContext";
 
 export default function ContentsList() {
   const { products: data } = useDashboard();
@@ -86,7 +84,7 @@ export default function ContentsList() {
         <div className="flex justify-between mt-4 lg:mt-0 lg:justify-end max-[1024px]:w-full max-[400px]:flex-col">
           <CreateDialogTrigger>
             <Button className="mr-2 max-[400px]:mr-0">
-              Create a new product <PlusIcon className="ml-2 h-4 w-4" />
+              Create a new contact <PlusIcon className="ml-2 h-4 w-4" />
             </Button>
           </CreateDialogTrigger>
           <DropdownMenu>
@@ -195,7 +193,7 @@ export default function ContentsList() {
   );
 }
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<any>[] = [
   {
     id: "select",
     header: ({ table }) => (

@@ -11,28 +11,24 @@ import { Button } from "@/components/ui/button";
 import { EditDialogTrigger } from "./EditDialogTrigger";
 import { DialogTrigger } from "@/components/ui/dialog";
 
-import { deleteProduct } from "@/services/products";
-import type { Product } from "@/services/types";
 import { useCallback, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { useDashboard } from "@/contexts/DashboardContext";
 
 interface Props {
-  product: Product;
+  product: any;
 }
 
 export default function EditDropdown({ product }: Props) {
   const [deleting, setDeleting] = useState(false);
 
   const { toast } = useToast();
-  const { refreshProduct } = useDashboard();
+  // const { refreshProduct } = useDashboard();
 
   const handleDeleteProduct = useCallback(async () => {
     setDeleting(true);
 
     try {
-      await deleteProduct(product.id);
-      await refreshProduct();
       toast({
         title: "Product delete",
         description: "Your product was deleted.",
