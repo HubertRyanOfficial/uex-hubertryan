@@ -11,11 +11,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command";
 
 import type { ContactAddress } from "./types";
 
 import { getCepInfo, getCities, getStates } from "@/services/address";
 import type { Cep, Districits, State } from "@/services/address/types";
+import { Calendar } from "lucide-react";
 
 interface Props {
   value: ContactAddress & { debouncedCep: string };
@@ -109,17 +120,18 @@ function ContactAddressForm({ value, onChange }: Props) {
           </SelectContent>
         </Select>
       </div>
-      <div className="grid grid-cols-4 items-center gap-4">
-        <Label htmlFor="cep" className="text-right">
-          Address details
-        </Label>
-        <Input
-          id="adress"
-          value={value.address}
-          onChange={(e) => onChange("address", e.target.value)}
-          className="col-span-3"
-          placeholder="Enter address details (e.g., street, city)."
-        />
+      <div className="w-full flex justify-end">
+        <Command className="rounded-lg border shadow-md w-[86%]">
+          <CommandInput placeholder="Enter address details (e.g., street, city)." />
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Suggestions">
+              <CommandItem>
+                <span>Calendar</span>
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
       </div>
     </div>
   );
