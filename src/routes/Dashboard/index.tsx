@@ -1,5 +1,5 @@
 import Header from "@/components/Header";
-import ContactWrapper from "./components/ContactWrapper";
+import ContactWrapper from "../../components/contact/ContactWrapper";
 
 export default function Dashboard() {
   return (

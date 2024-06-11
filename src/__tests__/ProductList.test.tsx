@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import ProductList from "../routes/Dashboard/components/ContactList";
+import ProductList from "../components/contact/ContactList";
 
 const productsMock = [
   {
