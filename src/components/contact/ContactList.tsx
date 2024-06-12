@@ -17,6 +17,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import dayjs from "dayjs";
+import { cpf } from "cpf-cnpj-validator";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -35,15 +36,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CreateSheetTrigger } from "./CreateSheetTrigger";
 
+import { CreateSheetTrigger } from "./CreateSheetTrigger";
 import EditDropdown from "./EditDropdown";
-import { FullContact } from "@/contexts/AuthContext/types";
+
 import { useAuth } from "@/contexts/AuthContext";
-import { cpf } from "cpf-cnpj-validator";
+import { useMaps } from "@/contexts/MapsContext";
+import { FullContact } from "@/contexts/AuthContext/types";
 
 export default function ContentsList() {
   const { currentUser } = useAuth();
+  const { handleMapPosition } = useMaps();
 
   const filterType = React.useRef<"name" | "cpf" | null>(null);
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -86,6 +89,23 @@ export default function ContentsList() {
       filterType.current = "name";
     }
   };
+
+  // Listening for rows selected in the table to use map context and change location
+  React.useEffect(() => {
+    const selectedRowKeysIndex = Object.keys(rowSelection);
+    if (selectedRowKeysIndex.length > 0) {
+      const indexSelected = Number(selectedRowKeysIndex[0]);
+
+      if (currentUser) {
+        const contactSelected = currentUser.contacts[indexSelected];
+        if (contactSelected) {
+          handleMapPosition(contactSelected.location);
+        }
+      }
+    } else {
+      handleMapPosition(null);
+    }
+  }, [rowSelection, currentUser]);
 
   return (
     <div className="w-full h-[600px] bg-white px-4 rounded-xl shadow-md overflow-y-auto">
@@ -185,10 +205,6 @@ export default function ContentsList() {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
         <div className="space-x-2">
           <Button
             variant="outline"
@@ -215,20 +231,14 @@ export default function ContentsList() {
 export const columns: ColumnDef<FullContact>[] = [
   {
     id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
+
+    cell: ({ row, table }) => (
       <Checkbox
         checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        onCheckedChange={(value) => {
+          table.toggleAllPageRowsSelected(false);
+          row.toggleSelected(!!value);
+        }}
         aria-label="Select row"
       />
     ),
