@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import {
   Command,
@@ -20,7 +20,7 @@ interface Props {
   onChange: (e: string) => void;
 }
 
-export default function ContactAddressAutocomplete({ value, onChange }: Props) {
+function ContactAddressAutocomplete({ value, onChange }: Props) {
   const debouncedAddress = useDebounce(value.address, 500);
   const [showsCommandList, setShowsCommandList] = useState(false);
 
@@ -83,3 +83,5 @@ export default function ContactAddressAutocomplete({ value, onChange }: Props) {
     </div>
   );
 }
+
+export default memo(ContactAddressAutocomplete);
