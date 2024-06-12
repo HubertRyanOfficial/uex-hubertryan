@@ -92,6 +92,9 @@ export function AuthProvider({ children }: AuthContextProps) {
     const newUsersList = users.filter((_, i) => i !== currentUserIndex);
     setUsers(newUsersList);
     clearCurrentUser();
+    toast({
+      title: "Account deleted successly",
+    });
   }, [currentUser, users, clearCurrentUser]);
 
   useEffect(() => {
