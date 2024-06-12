@@ -37,6 +37,7 @@ interface AuthContextHandles {
   handleSignOut: () => void;
   handleDeleteAccount: () => void;
   handleAddNewContact: (contact: ContactForm) => Promise<void>;
+  handleDeleteContact: (contact: FullContact) => void;
 }
 
 export type AuthContextType = AuthContextValues & AuthContextHandles;

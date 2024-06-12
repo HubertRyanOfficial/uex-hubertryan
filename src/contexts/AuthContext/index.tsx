@@ -11,7 +11,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { cpf } from "cpf-cnpj-validator";
 
 import { useToast } from "@/components/ui/use-toast";
-import { AuthContextType, ContactForm, User, UserCredentials } from "./types";
+import {
+  AuthContextType,
+  ContactForm,
+  FullContact,
+  User,
+  UserCredentials,
+} from "./types";
 import { getLocationByAddress } from "@/services/maps";
 
 interface AuthContextProps {
@@ -133,7 +139,21 @@ export function AuthProvider({ children }: AuthContextProps) {
     [currentUser]
   );
 
-  console.log(currentUser);
+  const handleDeleteContact = useCallback(
+    (contact: FullContact) => {
+      if (currentUser) {
+        const newContactList = currentUser.contacts.filter(
+          (cont) => cont.cpf !== contact.cpf
+        );
+
+        setCurrentUser({
+          ...currentUser,
+          contacts: newContactList,
+        });
+      }
+    },
+    [currentUser]
+  );
 
   return (
     <AuthContext.Provider
@@ -144,6 +164,7 @@ export function AuthProvider({ children }: AuthContextProps) {
         handleSignOut,
         handleDeleteAccount,
         handleAddNewContact,
+        handleDeleteContact,
       }}
     >
       {!loading ? children : null}

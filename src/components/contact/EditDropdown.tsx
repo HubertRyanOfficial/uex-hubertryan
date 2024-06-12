@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 import { DotsHorizontalIcon, ReloadIcon } from "@radix-ui/react-icons";
 
 import {
@@ -10,40 +11,36 @@ import {
 import { Button } from "@/components/ui/button";
 import { EditDialogTrigger } from "./EditDialogTrigger";
 import { DialogTrigger } from "@/components/ui/dialog";
-
-import { useCallback, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
+import { useAuth } from "@/contexts/AuthContext";
+import type { FullContact } from "@/contexts/AuthContext/types";
+
 interface Props {
-  product: any;
+  contact: FullContact;
 }
 
-export default function EditDropdown({ product }: Props) {
+export default function EditDropdown({ contact }: Props) {
+  const { handleDeleteContact } = useAuth();
+  const { toast } = useToast();
+
   const [deleting, setDeleting] = useState(false);
 
-  const { toast } = useToast();
-  // const { refreshProduct } = useDashboard();
-
-  const handleDeleteProduct = useCallback(async () => {
+  // Deleting contact from the current user list and simulating a api call
+  const handleDeleteSpecifContact = useCallback(() => {
     setDeleting(true);
 
-    try {
+    setTimeout(() => {
+      handleDeleteContact(contact);
       toast({
-        title: "Product delete",
-        description: "Your product was deleted.",
+        title: "Your Contact was deleted. 🗑️",
       });
-    } catch (error) {
-      toast({
-        title: "Ops!",
-        description: "Error when edting this product.",
-      });
-    } finally {
       setDeleting(false);
-    }
-  }, [product]);
+    }, 500);
+  }, [contact, handleDeleteContact]);
 
   return (
-    <EditDialogTrigger product={product}>
+    <EditDialogTrigger contact={contact}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -57,7 +54,7 @@ export default function EditDropdown({ product }: Props) {
             <DropdownMenuItem onClick={() => {}}>Edit</DropdownMenuItem>
           </DialogTrigger>
           <DropdownMenuItem
-            onClick={handleDeleteProduct}
+            onClick={handleDeleteSpecifContact}
             className="text-red-500"
             disabled={deleting}
           >

@@ -284,7 +284,7 @@ export const columns: ColumnDef<FullContact>[] = [
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      return <EditDropdown product={row.original} />;
+      return <EditDropdown contact={row.original} />;
     },
   },
 ];
