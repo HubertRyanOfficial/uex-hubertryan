@@ -248,10 +248,10 @@ export const columns: ColumnDef<FullContact>[] = [
     ),
   },
   {
-    accessorKey: "full_address",
+    accessorKey: "address",
     header: "Address",
     cell: ({ row }) => (
-      <div className="capitalize w-[200px]">{row.getValue("full_address")}</div>
+      <div className="capitalize w-[200px]">{row.getValue("address")}</div>
     ),
   },
   {

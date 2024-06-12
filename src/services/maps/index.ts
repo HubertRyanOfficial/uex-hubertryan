@@ -36,7 +36,7 @@ export const getSuggestions = async (address: ContactAddress) => {
 export const getLocationByAddress = async (encodedAddress: string) => {
   try {
     const response = await axios.get<any>(
-      `${PROXY}https://maps.googleapis.com/maps/api/geocode/json`,
+      `https://maps.googleapis.com/maps/api/geocode/json`,
       {
         params: {
           address: encodedAddress,

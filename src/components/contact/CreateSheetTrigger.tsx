@@ -95,6 +95,7 @@ export function CreateSheetTrigger({ children }: Props) {
       };
 
       await handleAddNewContact(contactData);
+      setOpen(false);
     } catch (error) {
       console.log("Error adding new contact", error);
     } finally {

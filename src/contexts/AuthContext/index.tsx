@@ -105,28 +105,32 @@ export function AuthProvider({ children }: AuthContextProps) {
         });
         return;
       }
-
-      const address = `${data.city}, ${data.uf}, Brazil`;
-      const encodedAddress = encodeURIComponent(address);
-
-      const location = await getLocationByAddress(encodedAddress); // Getting location by enconded address with city and uf
-      const position = location[0].geometry;
-
-      const formatedCpf = data.cpf.replace(".", "").replace("-", "");
-      const fullAddress = `${data.address} - ${address} - ${data.cep}`;
-
-      const newContact = {
-        name: data.name,
-        phone: data.phone,
-        cpf: formatedCpf,
-        full_address: fullAddress,
-        location: {
-          lat: Number(position.location.lat),
-          long: Number(position.location.lng),
-        },
-      };
-
       if (currentUser) {
+        const formatedCpf = data.cpf.replace(".", "").replace("-", "");
+
+        if (currentUser.contacts.find((cont) => cont.cpf === formatedCpf)) {
+          toast({
+            title: "Esse CPF já existe",
+            description: "CPF sendo usado por outro contato.",
+          });
+          return;
+        }
+
+        const address = `${data.city}, ${data.uf}, Brazil`;
+        const encodedAddress = encodeURIComponent(address);
+
+        const location = await getLocationByAddress(encodedAddress); // Getting location by enconded address with city and uf
+        const position = location[0].geometry;
+
+        const newContact = {
+          ...data,
+          cpf: formatedCpf,
+          location: {
+            lat: Number(position.location.lat),
+            long: Number(position.location.lng),
+          },
+        };
+
         const newContacts = [...currentUser.contacts, newContact];
         setCurrentUser({
           ...currentUser,
@@ -138,6 +142,63 @@ export function AuthProvider({ children }: AuthContextProps) {
     },
     [currentUser]
   );
+
+  const handleEditContact = useCallback(
+    async (contact: ContactForm) => {
+      if (currentUser) {
+        if (!cpf.isValid(contact.cpf)) {
+          toast({
+            title: "Formato do CPF inválido  ❌",
+          });
+          return;
+        }
+
+        const contactIndex = currentUser.contacts.findIndex(
+          (cont) => cont.cpf === contact.cpf
+        );
+
+        let newContactList = [...currentUser.contacts];
+
+        let location;
+
+        if (
+          newContactList[contactIndex] &&
+          contact.address !== newContactList[contactIndex].address
+        ) {
+          const address = `${contact.city}, ${contact.uf}, Brazil`;
+          const encodedAddress = encodeURIComponent(address);
+
+          const newLocation = await getLocationByAddress(encodedAddress);
+          const position = newLocation[0].geometry;
+
+          location = {
+            lat: Number(position.location.lat),
+            long: Number(position.location.lng),
+          };
+        } else {
+          location = newContactList[contactIndex].location;
+        }
+
+        const formatedCpf = contact.cpf.replace(".", "").replace("-", "");
+
+        newContactList[contactIndex] = {
+          ...contact,
+          cpf: formatedCpf,
+          location,
+        };
+
+        console.log(newContactList);
+
+        setCurrentUser({
+          ...currentUser,
+          contacts: newContactList,
+        });
+      }
+    },
+    [currentUser]
+  );
+
+  console.log(currentUser);
 
   const handleDeleteContact = useCallback(
     (contact: FullContact) => {
@@ -164,6 +225,7 @@ export function AuthProvider({ children }: AuthContextProps) {
         handleSignOut,
         handleDeleteAccount,
         handleAddNewContact,
+        handleEditContact,
         handleDeleteContact,
       }}
     >

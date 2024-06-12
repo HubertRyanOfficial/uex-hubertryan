@@ -13,11 +13,7 @@ export interface ContactForm {
   address: string;
 }
 
-export interface FullContact {
-  name: string;
-  cpf: string;
-  phone: string;
-  full_address: string;
+export interface FullContact extends ContactForm {
   location: {
     lat: number;
     long: number;
@@ -37,6 +33,7 @@ interface AuthContextHandles {
   handleSignOut: () => void;
   handleDeleteAccount: () => void;
   handleAddNewContact: (contact: ContactForm) => Promise<void>;
+  handleEditContact: (contact: ContactForm) => Promise<void>;
   handleDeleteContact: (contact: FullContact) => void;
 }
 
