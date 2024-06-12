@@ -77,7 +77,10 @@ function ContactAddressForm({ value, onChange }: Props) {
       <div className="flex flex-row gap-x-4 justify-end">
         <Select
           value={value.uf}
-          onValueChange={(value) => onChange("uf", value)}
+          onValueChange={(value) => {
+            onChange("uf", value);
+            onChange("city", "");
+          }}
         >
           <SelectTrigger
             disabled={isLoadingStates || isLoadingCep}

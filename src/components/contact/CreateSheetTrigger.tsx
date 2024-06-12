@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -10,17 +10,22 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import ContactInfoForm from "./ContactInfoForm";
-import ContactAddressForm from "./ContactAddressForm";
+import ContactInfoForm from "./form/ContactInfoForm";
+import ContactAddressForm from "./form/ContactAddressForm";
+import { ContactAddress, ContactInfo } from "./form/types";
 
-import { ContactAddress, ContactInfo } from "./types";
+import { useAuth } from "@/contexts/AuthContext";
+
+import { ReloadIcon } from "@radix-ui/react-icons";
 
 interface Props {
   children: React.ReactNode;
 }
 
 export function CreateSheetTrigger({ children }: Props) {
+  const { handleAddNewContact } = useAuth();
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [contactInfo, setContactInfo] = useState({
     name: "",
@@ -69,6 +74,34 @@ export function CreateSheetTrigger({ children }: Props) {
     []
   );
 
+  const allInputsCompleted = useMemo(
+    () =>
+      contactInfo.cpf &&
+      contactInfo.name &&
+      contactInfo.phone &&
+      contactAddress.address &&
+      contactAddress.cep &&
+      contactAddress.city &&
+      contactAddress.uf,
+    [contactInfo, contactAddress]
+  );
+
+  const handleCreateNewContact = useCallback(async () => {
+    try {
+      setLoading(true);
+      const contactData = {
+        ...contactInfo,
+        ...contactAddress,
+      };
+
+      await handleAddNewContact(contactData);
+    } catch (error) {
+      console.log("Error adding new contact", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [contactInfo, contactAddress]);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{children}</SheetTrigger>
@@ -85,8 +118,12 @@ export function CreateSheetTrigger({ children }: Props) {
           onChange={handleContactAddress}
         />
         <SheetFooter>
-          <Button type="submit" onClick={() => {}}>
-            {/* {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />} */}
+          <Button
+            disabled={!allInputsCompleted || loading}
+            type="submit"
+            onClick={handleCreateNewContact}
+          >
+            {loading && <ReloadIcon className="mr-2 h-4 w-4 animate-spin" />}
             Create contact
           </Button>
         </SheetFooter>

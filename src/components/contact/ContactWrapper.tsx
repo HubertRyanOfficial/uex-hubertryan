@@ -1,6 +1,6 @@
 import { PlusIcon } from "@radix-ui/react-icons";
 import ContactList from "./ContactList";
-import { CreateSheetTrigger } from "./form/CreateSheetTrigger";
+import { CreateSheetTrigger } from "./CreateSheetTrigger";
 
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";

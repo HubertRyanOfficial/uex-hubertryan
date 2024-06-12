@@ -55,7 +55,6 @@ function ContactAddressAutocomplete({ value, onChange }: Props) {
           value={value.address}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setShowsCommandList(true)}
-          onBlur={() => setShowsCommandList(false)}
           placeholder="Enter address details (e.g., street, city)."
         />
         {showsCommandList && (

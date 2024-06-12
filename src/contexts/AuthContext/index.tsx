@@ -8,8 +8,11 @@ import {
 } from "react";
 
 import { useLocation, useNavigate } from "react-router-dom";
+import { cpf } from "cpf-cnpj-validator";
 
-import { AuthContextType, User, UserCredentials } from "./types";
+import { useToast } from "@/components/ui/use-toast";
+import { AuthContextType, ContactForm, User, UserCredentials } from "./types";
+import { getLocationByAddress } from "@/services/maps";
 
 interface AuthContextProps {
   children: React.ReactNode;
@@ -20,6 +23,7 @@ const AuthContext = createContext({} as AuthContextType);
 export function AuthProvider({ children }: AuthContextProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const [users, setUsers] = usePersist<User[]>("uex-users", []);
   const [currentUser, setCurrentUser, clearCurrentUser] =
@@ -87,6 +91,47 @@ export function AuthProvider({ children }: AuthContextProps) {
     handleListenUser();
   }, [currentUser, handleListenUser]);
 
+  const handleAddNewContact = useCallback(
+    async (data: ContactForm) => {
+      const address = `${data.city}, ${data.uf}, Brazil`;
+      const encodedAddress = encodeURIComponent(address);
+
+      const location = await getLocationByAddress(encodedAddress); // Getting location by formated address with city and uf
+      const position = location[0].geometry;
+
+      if (!cpf.isValid(data.cpf)) {
+        toast({
+          title: "Formato do CPF inválido  ❌",
+        });
+      }
+
+      const formatedCpf = cpf.format(data.cpf);
+      const fullAddress = `${data.address} - ${address} - ${data.cep}`;
+
+      const newContact = {
+        name: data.name,
+        phone: data.phone,
+        cpf: formatedCpf,
+        full_address: fullAddress,
+        location: {
+          lat: Number(position.location.lat),
+          long: Number(position.location.long),
+        },
+      };
+
+      if (currentUser) {
+        const newContacts = [...currentUser.contacts, newContact];
+        setCurrentUser({
+          ...currentUser,
+          contacts: newContacts,
+        });
+      }
+
+      return;
+    },
+    [currentUser]
+  );
+
   return (
     <AuthContext.Provider
       value={{
@@ -95,6 +140,7 @@ export function AuthProvider({ children }: AuthContextProps) {
         handleLogin,
         handleSignOut,
         handleDeleteAccount,
+        handleAddNewContact,
       }}
     >
       {!loading ? children : null}
