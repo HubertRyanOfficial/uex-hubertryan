@@ -14,6 +14,7 @@ export interface ContactForm {
 }
 
 export interface FullContact extends ContactForm {
+  created_at: number;
   location: {
     lat: number;
     long: number;

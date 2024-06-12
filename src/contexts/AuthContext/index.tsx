@@ -9,6 +9,7 @@ import {
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { cpf } from "cpf-cnpj-validator";
+import dayjs from "dayjs";
 
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -125,6 +126,7 @@ export function AuthProvider({ children }: AuthContextProps) {
         const newContact = {
           ...data,
           cpf: formatedCpf,
+          created_at: dayjs().valueOf(),
           location: {
             lat: Number(position.location.lat),
             long: Number(position.location.lng),
@@ -183,11 +185,10 @@ export function AuthProvider({ children }: AuthContextProps) {
 
         newContactList[contactIndex] = {
           ...contact,
+          created_at: dayjs().valueOf(),
           cpf: formatedCpf,
           location,
         };
-
-        console.log(newContactList);
 
         setCurrentUser({
           ...currentUser,

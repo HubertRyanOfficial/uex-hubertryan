@@ -262,7 +262,7 @@ export const columns: ColumnDef<FullContact>[] = [
     ),
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "created_at",
     header: ({ column }) => {
       return (
         <Button
@@ -275,7 +275,7 @@ export const columns: ColumnDef<FullContact>[] = [
       );
     },
     cell: ({ row }) => {
-      const date = dayjs(row.getValue("createdAt")).format(
+      const date = dayjs(row.getValue("created_at")).format(
         "HH:MM  -  DD/MM/YYYY"
       );
       return <div className="lowercase">{date}</div>;
