@@ -96,7 +96,7 @@ export function AuthProvider({ children }: AuthContextProps) {
       const address = `${data.city}, ${data.uf}, Brazil`;
       const encodedAddress = encodeURIComponent(address);
 
-      const location = await getLocationByAddress(encodedAddress); // Getting location by formated address with city and uf
+      const location = await getLocationByAddress(encodedAddress); // Getting location by enconded address with city and uf
       const position = location[0].geometry;
 
       if (!cpf.isValid(data.cpf)) {
@@ -115,7 +115,7 @@ export function AuthProvider({ children }: AuthContextProps) {
         full_address: fullAddress,
         location: {
           lat: Number(position.location.lat),
-          long: Number(position.location.long),
+          long: Number(position.location.lng),
         },
       };
 
@@ -131,6 +131,8 @@ export function AuthProvider({ children }: AuthContextProps) {
     },
     [currentUser]
   );
+
+  console.log(currentUser);
 
   return (
     <AuthContext.Provider
