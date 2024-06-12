@@ -1,6 +1,5 @@
 import { useCallback, useState } from "react";
 
-import { useDebounce } from "@uidotdev/usehooks";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -29,12 +28,11 @@ export function CreateSheetTrigger({ children }: Props) {
     phone: "",
   });
   const [contactAddress, setContactAddress] = useState({
+    cep: "",
     uf: "",
     city: "",
     address: "",
   });
-  const [cep, setCep] = useState("");
-  const debouncedCep = useDebounce(cep, 400);
 
   const handleContactInfo = useCallback(
     (name: keyof ContactInfo, value: string) => {
@@ -52,7 +50,12 @@ export function CreateSheetTrigger({ children }: Props) {
     (name: keyof ContactAddress, value: string) => {
       if (name === "cep") {
         const formatedCep = value.replace(/[.\- ]/g, "");
-        setCep(formatedCep);
+        setContactAddress((prev) => {
+          return {
+            ...prev,
+            cep: formatedCep,
+          };
+        });
         return;
       }
 
@@ -78,7 +81,7 @@ export function CreateSheetTrigger({ children }: Props) {
         </SheetHeader>
         <ContactInfoForm value={contactInfo} onChange={handleContactInfo} />
         <ContactAddressForm
-          value={{ ...contactAddress, cep, debouncedCep }}
+          value={contactAddress}
           onChange={handleContactAddress}
         />
         <SheetFooter>

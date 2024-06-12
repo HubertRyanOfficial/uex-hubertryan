@@ -1,5 +1,7 @@
 import { memo, useEffect } from "react";
+
 import { useQuery } from "@tanstack/react-query";
+import { useDebounce } from "@uidotdev/usehooks";
 
 import { Label } from "../../ui/label";
 import { Input } from "../../ui/input";
@@ -11,22 +13,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-
-import type { ContactAddress } from "./types";
 
 import { getCepInfo, getCities, getStates } from "@/services/address";
 import type { Cep, Districits, State } from "@/services/address/types";
 
+import ContactAddressAutocomplete from "./ContactAddressAutocomplete";
+import type { ContactAddress } from "./types";
+
 interface Props {
-  value: ContactAddress & { debouncedCep: string };
+  value: ContactAddress;
   onChange: (name: keyof ContactAddress, value: string) => void;
 }
 
@@ -49,8 +44,10 @@ function ContactAddressForm({ value, onChange }: Props) {
     enabled: false,
   });
 
+  const debouncedCep = useDebounce(value.cep, 500);
+
   useEffect(() => {
-    async function getCepInfo() {
+    async function getCepInfoData() {
       const currentCepData = await refetchCepInfo();
       if (currentCepData.data) {
         onChange("uf", currentCepData.data.uf || "");
@@ -58,10 +55,10 @@ function ContactAddressForm({ value, onChange }: Props) {
       }
     }
 
-    if (value.debouncedCep && value.debouncedCep.length > 4) {
-      getCepInfo();
+    if (debouncedCep && debouncedCep.length > 4) {
+      getCepInfoData();
     }
-  }, [value.debouncedCep]);
+  }, [debouncedCep]);
 
   return (
     <div className="grid gap-4 pb-4">
@@ -117,19 +114,10 @@ function ContactAddressForm({ value, onChange }: Props) {
           </SelectContent>
         </Select>
       </div>
-      <div className="w-full flex justify-end">
-        <Command className="rounded-lg border shadow-md w-[86%]">
-          <CommandInput placeholder="Enter address details (e.g., street, city)." />
-          <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
-            <CommandGroup heading="Suggestions">
-              <CommandItem>
-                <span>Rua Pasteur 463, Curitiba, Paraná BR</span>
-              </CommandItem>
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </div>
+      <ContactAddressAutocomplete
+        value={value}
+        onChange={(value) => onChange("address", value)}
+      />
     </div>
   );
 }
