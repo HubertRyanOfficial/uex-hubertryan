@@ -98,6 +98,7 @@ export function AuthProvider({ children }: AuthContextProps) {
     handleListenUser();
   }, [currentUser, handleListenUser]);
 
+  // Creating a new contact and make cpf validation and address location
   const handleAddNewContact = useCallback(
     async (data: ContactForm) => {
       if (!cpf.isValid(data.cpf)) {
@@ -145,6 +146,7 @@ export function AuthProvider({ children }: AuthContextProps) {
     [currentUser]
   );
 
+  // Editing contact in array position updating the current User contact
   const handleEditContact = useCallback(
     async (contact: ContactForm) => {
       if (currentUser) {
@@ -199,8 +201,7 @@ export function AuthProvider({ children }: AuthContextProps) {
     [currentUser]
   );
 
-  console.log(currentUser);
-
+  // Deleting contact by cpf updating the current User contact
   const handleDeleteContact = useCallback(
     (contact: FullContact) => {
       if (currentUser) {
