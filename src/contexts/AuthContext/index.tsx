@@ -10,6 +10,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { cpf } from "cpf-cnpj-validator";
 import dayjs from "dayjs";
+import _ from "lodash";
 
 import { useToast } from "@/components/ui/use-toast";
 import {
@@ -47,6 +48,20 @@ export function AuthProvider({ children }: AuthContextProps) {
     setLoading(false);
   }, [currentUser, location]);
 
+  const syncronizeDataUser = useCallback(() => {
+    if (currentUser) {
+      const userIndexPostion = users.findIndex(
+        (user) => user.email === currentUser.email
+      );
+
+      if (!_.isEqual(currentUser, users[userIndexPostion])) {
+        let newUsersList = [...users];
+        newUsersList[userIndexPostion] = currentUser;
+        setUsers(newUsersList);
+      }
+    }
+  }, [currentUser, users]);
+
   // * Create a new user and persisting it
   const handleSignUp = useCallback(
     (newUser: User) => {
@@ -82,7 +97,10 @@ export function AuthProvider({ children }: AuthContextProps) {
   );
 
   // Sign out user cleaning persisted current user data
-  const handleSignOut = () => clearCurrentUser();
+  const handleSignOut = () => {
+    setCurrentUser(null);
+    navigate("/");
+  };
 
   // Deleting account from persisted data and signing out current user
   const handleDeleteAccount = useCallback(() => {
@@ -96,10 +114,6 @@ export function AuthProvider({ children }: AuthContextProps) {
       title: "Account deleted successly",
     });
   }, [currentUser, users, clearCurrentUser]);
-
-  useEffect(() => {
-    handleListenUser();
-  }, [currentUser, handleListenUser]);
 
   // Creating a new contact and make cpf validation and address location
   const handleAddNewContact = useCallback(
@@ -220,6 +234,13 @@ export function AuthProvider({ children }: AuthContextProps) {
     },
     [currentUser]
   );
+
+  // Updating the current user in the application with the users global state in every change
+  // Check current user route
+  useEffect(() => {
+    handleListenUser();
+    syncronizeDataUser();
+  }, [currentUser, users, handleListenUser, syncronizeDataUser]);
 
   return (
     <AuthContext.Provider

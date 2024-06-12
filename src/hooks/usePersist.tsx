@@ -19,11 +19,9 @@ export default function usePersist<T>(
 
   const setNewValue = useCallback(
     (newValue: T) => {
-      if (newValue) {
-        const stringifiedData = JSON.stringify(newValue);
-        localStorage.setItem(originalKey, stringifiedData);
-        setValue(newValue);
-      }
+      const stringifiedData = JSON.stringify(newValue);
+      localStorage.setItem(originalKey, stringifiedData);
+      setValue(newValue);
     },
     [originalKey]
   );
