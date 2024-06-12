@@ -2,18 +2,13 @@ import { PlusIcon } from "@radix-ui/react-icons";
 import ContactList from "./ContactList";
 import { CreateSheetTrigger } from "./CreateSheetTrigger";
 
-import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ProductWrapper() {
-  const loading = false;
-  const products = [];
+  const { currentUser } = useAuth();
 
-  if (loading) {
-    return <Loader color="#000000" />;
-  }
-
-  if (products.length === 0) {
+  if (currentUser?.contacts && currentUser?.contacts.length === 0) {
     return (
       <>
         <h1 className="text-5xl font-bold">Create new contact</h1>

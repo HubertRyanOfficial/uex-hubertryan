@@ -38,8 +38,14 @@ import {
 import { CreateSheetTrigger } from "./CreateSheetTrigger";
 
 import EditDropdown from "./EditDropdown";
+import { FullContact } from "@/contexts/AuthContext/types";
+import { useAuth } from "@/contexts/AuthContext";
+import { cpf } from "cpf-cnpj-validator";
 
 export default function ContentsList() {
+  const { currentUser } = useAuth();
+
+  const filterType = React.useRef<"name" | "cpf" | null>(null);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -49,7 +55,7 @@ export default function ContentsList() {
   const [rowSelection, setRowSelection] = React.useState({});
 
   const table = useReactTable({
-    data: [],
+    data: currentUser?.contacts || [],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -67,15 +73,30 @@ export default function ContentsList() {
     },
   });
 
+  const handleChangeEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value.match(/^-?\d+(\.\d+)?/)) {
+      table.getColumn("cpf")?.setFilterValue(event.target.value);
+      filterType.current = "cpf";
+    } else if (!event.target.value && filterType.current == "cpf") {
+      table.getColumn("cpf")?.setFilterValue("");
+      filterType.current = null;
+    } else {
+      table.getColumn("name")?.setFilterValue(event.target.value);
+      filterType.current = "name";
+    }
+  };
+
   return (
     <div className="w-full h-[600px] bg-white px-4 rounded-xl shadow-md overflow-y-auto">
       <div className="flex justify-between items-center py-4 lg:flex-row flex-col">
         <Input
-          placeholder="Filter name..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+          placeholder="Filter name or CPF..."
+          value={
+            (table.getColumn("name")?.getFilterValue() as string) ??
+            (table.getColumn("cpf")?.getFilterValue() as string) ??
+            ""
           }
+          onChange={handleChangeEvent}
           className="lg:max-w-sm w-full"
         />
         <div className="flex justify-between mt-4 lg:mt-0 lg:justify-end max-[1024px]:w-full max-[400px]:flex-col">
@@ -190,7 +211,7 @@ export default function ContentsList() {
   );
 }
 
-export const columns: ColumnDef<any>[] = [
+export const columns: ColumnDef<FullContact>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -219,6 +240,27 @@ export const columns: ColumnDef<any>[] = [
     cell: ({ row }) => <div className="capitalize">{row.getValue("name")}</div>,
   },
   {
+    accessorKey: "cpf",
+    header: "CPF",
+    cell: ({ row }) => (
+      <div className="capitalize">{cpf.format(row.getValue("cpf"))}</div>
+    ),
+  },
+  {
+    accessorKey: "full_address",
+    header: "Address",
+    cell: ({ row }) => (
+      <div className="capitalize w-[200px]">{row.getValue("full_address")}</div>
+    ),
+  },
+  {
+    accessorKey: "phone",
+    header: "Phone number",
+    cell: ({ row }) => (
+      <div className="capitalize w-[200px]">{row.getValue("phone")}</div>
+    ),
+  },
+  {
     accessorKey: "createdAt",
     header: ({ column }) => {
       return (
@@ -237,15 +279,6 @@ export const columns: ColumnDef<any>[] = [
       );
       return <div className="lowercase">{date}</div>;
     },
-  },
-  {
-    accessorKey: "price",
-    header: "Price",
-    cell: ({ row }) => (
-      <div className="capitalize">
-        {Number(row.getValue("price")).toFixed(2)} $
-      </div>
-    ),
   },
   {
     id: "actions",

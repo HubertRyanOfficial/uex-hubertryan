@@ -93,19 +93,20 @@ export function AuthProvider({ children }: AuthContextProps) {
 
   const handleAddNewContact = useCallback(
     async (data: ContactForm) => {
+      if (!cpf.isValid(data.cpf)) {
+        toast({
+          title: "Formato do CPF inválido  ❌",
+        });
+        return;
+      }
+
       const address = `${data.city}, ${data.uf}, Brazil`;
       const encodedAddress = encodeURIComponent(address);
 
       const location = await getLocationByAddress(encodedAddress); // Getting location by enconded address with city and uf
       const position = location[0].geometry;
 
-      if (!cpf.isValid(data.cpf)) {
-        toast({
-          title: "Formato do CPF inválido  ❌",
-        });
-      }
-
-      const formatedCpf = cpf.format(data.cpf);
+      const formatedCpf = data.cpf.replace(".", "").replace("-", "");
       const fullAddress = `${data.address} - ${address} - ${data.cep}`;
 
       const newContact = {
