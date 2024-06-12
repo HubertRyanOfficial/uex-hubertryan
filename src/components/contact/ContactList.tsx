@@ -73,6 +73,7 @@ export default function ContentsList() {
     },
   });
 
+  // This change handle functions makes possible to filter contacts by name and cpf number getting type of initial values
   const handleChangeEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.match(/^-?\d+(\.\d+)?/)) {
       table.getColumn("cpf")?.setFilterValue(event.target.value);
