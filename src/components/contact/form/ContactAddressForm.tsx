@@ -16,6 +16,7 @@ import {
 
 import { getCepInfo, getCities, getStates } from "@/services/address";
 import type { Cep, Districits, State } from "@/services/address/types";
+import { useToast } from "@/components/ui/use-toast";
 
 import ContactAddressAutocomplete from "./ContactAddressAutocomplete";
 import type { ContactAddress } from "./types";
@@ -26,6 +27,7 @@ interface Props {
 }
 
 function ContactAddressForm({ value, onChange }: Props) {
+  const { toast } = useToast();
   const { data: statesData, isLoading: isLoadingStates } = useQuery<State[]>({
     queryKey: ["states"],
     queryFn: getStates,
@@ -48,10 +50,17 @@ function ContactAddressForm({ value, onChange }: Props) {
 
   useEffect(() => {
     async function getCepInfoData() {
-      const currentCepData = await refetchCepInfo();
-      if (currentCepData.data) {
-        onChange("uf", currentCepData.data.uf || "");
-        onChange("city", currentCepData.data.localidade || "");
+      try {
+        const currentCepData = await refetchCepInfo();
+        if (currentCepData.data) {
+          onChange("uf", currentCepData.data.uf || "");
+          onChange("city", currentCepData.data.localidade || "");
+        }
+      } catch (error) {
+        toast({
+          title: "Error getting CEP information",
+          description: "Or this CEP is invalid",
+        });
       }
     }
 

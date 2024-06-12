@@ -24,10 +24,10 @@ export const getSuggestions = async (address: ContactAddress) => {
         `Error: ${error.response.status} - ${error.response.statusText}`
       );
     } else if (error.request) {
-      // A requisição foi feita, mas não houve resposta
+      // The request was made, but there was no response
       throw new Error("No response received from server");
     } else {
-      // Erro na configuração da requisição
+      // Error in request configuration
       throw new Error(`Request error: ${error.message}`);
     }
   }
@@ -52,10 +52,10 @@ export const getLocationByAddress = async (encodedAddress: string) => {
         `Error: ${error.response.status} - ${error.response.statusText}`
       );
     } else if (error.request) {
-      // A requisição foi feita, mas não houve resposta
+      // The request was made, but there was no response
       throw new Error("No response received from server");
     } else {
-      // Erro na configuração da requisição
+      // Error in request configuration
       throw new Error(`Request error: ${error.message}`);
     }
   }

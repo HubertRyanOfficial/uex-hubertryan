@@ -1,5 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 
+import { ReloadIcon } from "@radix-ui/react-icons";
+
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -15,8 +17,7 @@ import ContactAddressForm from "./form/ContactAddressForm";
 import { ContactAddress, ContactInfo } from "./form/types";
 
 import { useAuth } from "@/contexts/AuthContext";
-
-import { ReloadIcon } from "@radix-ui/react-icons";
+import { useToast } from "../ui/use-toast";
 
 interface Props {
   children: React.ReactNode;
@@ -24,6 +25,7 @@ interface Props {
 
 export function CreateSheetTrigger({ children }: Props) {
   const { handleAddNewContact } = useAuth();
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -97,7 +99,10 @@ export function CreateSheetTrigger({ children }: Props) {
       await handleAddNewContact(contactData);
       setOpen(false);
     } catch (error) {
-      console.log("Error adding new contact", error);
+      toast({
+        title: "Error adding new contact, try again.",
+        description: String(error),
+      });
     } finally {
       setLoading(false);
     }

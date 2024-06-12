@@ -38,7 +38,7 @@ export function AuthProvider({ children }: AuthContextProps) {
   const [loading, setLoading] = useState(true);
 
   // * Listening if an user is connected or not in the service and redirecting to the correct route
-  const handleListenUser = useCallback(async () => {
+  const handleListenUser = useCallback(() => {
     if (currentUser && location.pathname !== "/dashboard") {
       navigate("/dashboard");
     } else if (location.pathname === "/dashboard" && !currentUser) {
@@ -49,7 +49,7 @@ export function AuthProvider({ children }: AuthContextProps) {
 
   // * Create a new user and persisting it
   const handleSignUp = useCallback(
-    async (newUser: User) => {
+    (newUser: User) => {
       const findUserWithEmail = users.find(
         (user) => user.email === newUser.email
       );

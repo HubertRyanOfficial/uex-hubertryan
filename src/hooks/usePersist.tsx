@@ -3,16 +3,12 @@ import { useCallback, useEffect, useState } from "react";
 export default function usePersist<T>(
   key: string,
   initialState: T
-): [
-  value: T,
-  setNewValue: (newValue: T) => void,
-  clearValue: () => Promise<T>
-] {
+): [value: T, setNewValue: (newValue: T) => void, clearValue: () => T] {
   const originalKey = `persisted-state-data-${key}`;
 
   const [value, setValue] = useState(initialState);
 
-  const getPersistedData = useCallback(async () => {
+  const getPersistedData = useCallback(() => {
     const persistedData = localStorage.getItem(originalKey);
 
     if (persistedData) {
@@ -32,7 +28,7 @@ export default function usePersist<T>(
     [originalKey]
   );
 
-  const clearAllPersistData = useCallback(async () => {
+  const clearAllPersistData = useCallback(() => {
     setValue(initialState);
     localStorage.removeItem(originalKey);
     return initialState;

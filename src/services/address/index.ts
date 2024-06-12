@@ -14,10 +14,10 @@ export const getStates = async () => {
         `Error: ${error.response.status} - ${error.response.statusText}`
       );
     } else if (error.request) {
-      // A requisição foi feita, mas não houve resposta
+      // The request was made, but there was no response
       throw new Error("No response received from server");
     } else {
-      // Erro na configuração da requisição
+      //  Error in request configuration
       throw new Error(`Request error: ${error.message}`);
     }
   }
@@ -36,10 +36,10 @@ export const getCities = async (uf: string) => {
         `Error: ${error.response.status} - ${error.response.statusText}`
       );
     } else if (error.request) {
-      // A requisição foi feita, mas não houve resposta
+      // The request was made, but there was no response
       throw new Error("No response received from server");
     } else {
-      // Erro na configuração da requisição
+      // Error in request configuration
       throw new Error(`Request error: ${error.message}`);
     }
   }
@@ -58,10 +58,10 @@ export const getCepInfo = async (cep: string) => {
         `Error: ${error.response.status} - ${error.response.statusText}`
       );
     } else if (error.request) {
-      // A requisição foi feita, mas não houve resposta
+      // The request was made, but there was no response
       throw new Error("No response received from server");
     } else {
-      // Erro na configuração da requisição
+      // Error in request configuration
       throw new Error(`Request error: ${error.message}`);
     }
   }

@@ -1,15 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
 
+import { ReloadIcon } from "@radix-ui/react-icons";
+
+import { Button } from "@/components/ui/button";
 import { FullContact } from "@/contexts/AuthContext/types";
 import {
   Sheet,
@@ -22,9 +15,10 @@ import {
 } from "../ui/sheet";
 import ContactInfoForm from "./form/ContactInfoForm";
 import ContactAddressForm from "./form/ContactAddressForm";
-import { ReloadIcon } from "@radix-ui/react-icons";
 import { ContactAddress, ContactInfo } from "./form/types";
+
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Props {
   children: React.ReactNode;
@@ -33,6 +27,8 @@ interface Props {
 
 function EditDialogTrigger({ children, contact }: Props) {
   const { handleEditContact } = useAuth();
+  const { toast } = useToast();
+
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -106,7 +102,10 @@ function EditDialogTrigger({ children, contact }: Props) {
       await handleEditContact(contactData);
       setOpen(false);
     } catch (error) {
-      console.log("Error editing new contact", error);
+      toast({
+        title: "Error editing this contact, try again.",
+        description: String(error),
+      });
     } finally {
       setLoading(false);
     }
