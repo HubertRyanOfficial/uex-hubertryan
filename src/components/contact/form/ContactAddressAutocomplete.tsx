@@ -21,7 +21,8 @@ interface Props {
 }
 
 function ContactAddressAutocomplete({ value, onChange }: Props) {
-  const debouncedAddress = useDebounce(value.address, 500);
+  const [searchValue, setSearchValue] = useState(value.address);
+  const debouncedAddress = useDebounce(searchValue, 500);
   const [showsCommandList, setShowsCommandList] = useState(false);
 
   const { data, refetch } = useQuery({
@@ -44,17 +45,16 @@ function ContactAddressAutocomplete({ value, onChange }: Props) {
       onChange(addressSelected);
       setShowsCommandList(false);
     },
-    [onChange]
+    [onChange, searchValue]
   );
 
   return (
-    <div className="w-full flex flex-col items-end pb-8">
+    <div className="w-full flex flex-col items-end pb-10">
       <div className="w-[86%]">
         <Input
           id="address"
-          value={value.address}
-          onChange={(e) => onChange(e.target.value)}
-          onFocus={() => setShowsCommandList(true)}
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
           placeholder="Enter address details (e.g., street, city)."
         />
         {showsCommandList && (
