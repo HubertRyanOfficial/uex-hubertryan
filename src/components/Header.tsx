@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
 
 export default function Header() {
-  const { handleSignOut, handleDeleteAccount, currentUser } = useAuth();
+  const { handleSignOut, handleDeleteAccount, currentUser } = useUser();
 
   return (
     <header className="bg-white h-[6vh] px-8 flex flex-row items-center justify-end shadow-sm ">

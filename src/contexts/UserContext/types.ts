@@ -24,11 +24,11 @@ export interface User extends UserCredentials {
   contacts: FullContact[];
 }
 
-interface AuthContextValues {
+interface UserContextValues {
   currentUser: User | null;
 }
 
-interface AuthContextHandles {
+interface UserContextHandles {
   handleSignUp: (newUser: User) => void;
   handleLogin: (credentials: UserCredentials) => void;
   handleSignOut: () => void;
@@ -38,4 +38,4 @@ interface AuthContextHandles {
   handleDeleteContact: (contact: FullContact) => void;
 }
 
-export type AuthContextType = AuthContextValues & AuthContextHandles;
+export type UserContextType = UserContextValues & UserContextHandles;

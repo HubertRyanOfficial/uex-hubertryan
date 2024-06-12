@@ -40,12 +40,12 @@ import {
 import { CreateSheetTrigger } from "./CreateSheetTrigger";
 import EditDropdown from "./EditDropdown";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
 import { useMaps } from "@/contexts/MapsContext";
-import { FullContact } from "@/contexts/AuthContext/types";
+import { FullContact } from "@/contexts/UserContext/types";
 
 export default function ContentsList() {
-  const { currentUser } = useAuth();
+  const { currentUser } = useUser();
   const { handleMapPosition } = useMaps();
 
   const filterType = React.useRef<"name" | "cpf" | null>(null);

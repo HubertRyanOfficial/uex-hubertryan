@@ -14,16 +14,16 @@ import { EditDialogTrigger } from "./EditDialogTrigger";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
 import { useMaps } from "@/contexts/MapsContext";
-import type { FullContact } from "@/contexts/AuthContext/types";
+import type { FullContact } from "@/contexts/UserContext/types";
 
 interface Props {
   contact: FullContact;
 }
 
 export default function EditDropdown({ contact }: Props) {
-  const { handleDeleteContact } = useAuth();
+  const { handleDeleteContact } = useUser();
   const { toast } = useToast();
   const { handleMapPosition } = useMaps();
 

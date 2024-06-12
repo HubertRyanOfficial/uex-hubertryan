@@ -14,7 +14,7 @@ import _ from "lodash";
 
 import { useToast } from "@/components/ui/use-toast";
 import {
-  AuthContextType,
+  UserContextType,
   ContactForm,
   FullContact,
   User,
@@ -22,13 +22,13 @@ import {
 } from "./types";
 import { getLocationByAddress } from "@/services/maps";
 
-interface AuthContextProps {
+interface UserContextProps {
   children: React.ReactNode;
 }
 
-const AuthContext = createContext({} as AuthContextType);
+const UserContext = createContext({} as UserContextType);
 
-export function AuthProvider({ children }: AuthContextProps) {
+export function AuthProvider({ children }: UserContextProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -243,7 +243,7 @@ export function AuthProvider({ children }: AuthContextProps) {
   }, [currentUser, users, handleListenUser, syncronizeDataUser]);
 
   return (
-    <AuthContext.Provider
+    <UserContext.Provider
       value={{
         currentUser,
         handleSignUp,
@@ -256,8 +256,8 @@ export function AuthProvider({ children }: AuthContextProps) {
       }}
     >
       {!loading ? children : null}
-    </AuthContext.Provider>
+    </UserContext.Provider>
   );
 }
 
-export const useAuth = () => useContext(AuthContext);
+export const useUser = () => useContext(UserContext);

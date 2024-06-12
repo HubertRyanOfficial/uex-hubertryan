@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import { ReloadIcon } from "@radix-ui/react-icons";
 
 import { Button } from "@/components/ui/button";
-import { FullContact } from "@/contexts/AuthContext/types";
+import { FullContact } from "@/contexts/UserContext/types";
 import {
   Sheet,
   SheetContent,
@@ -17,7 +17,7 @@ import ContactInfoForm from "./form/ContactInfoForm";
 import ContactAddressForm from "./form/ContactAddressForm";
 import { ContactAddress, ContactInfo } from "./form/types";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/components/ui/use-toast";
 
 interface Props {
@@ -26,7 +26,7 @@ interface Props {
 }
 
 function EditDialogTrigger({ children, contact }: Props) {
-  const { handleEditContact } = useAuth();
+  const { handleEditContact } = useUser();
   const { toast } = useToast();
 
   const [open, setOpen] = useState(false);

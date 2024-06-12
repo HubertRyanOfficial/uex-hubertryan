@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
 
 export const schema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -25,7 +25,7 @@ export const schema = z.object({
 
 export default function LoginForm() {
   const { toast } = useToast();
-  const { handleLogin } = useAuth();
+  const { handleLogin } = useUser();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {

@@ -16,7 +16,7 @@ import ContactInfoForm from "./form/ContactInfoForm";
 import ContactAddressForm from "./form/ContactAddressForm";
 import { ContactAddress, ContactInfo } from "./form/types";
 
-import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
 import { useToast } from "../ui/use-toast";
 
 interface Props {
@@ -24,7 +24,7 @@ interface Props {
 }
 
 export function CreateSheetTrigger({ children }: Props) {
-  const { handleAddNewContact } = useAuth();
+  const { handleAddNewContact } = useUser();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);

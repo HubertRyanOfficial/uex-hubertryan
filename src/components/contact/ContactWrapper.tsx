@@ -3,10 +3,10 @@ import ContactList from "./ContactList";
 import { CreateSheetTrigger } from "./CreateSheetTrigger";
 
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
+import { useUser } from "@/contexts/UserContext";
 
 export default function ProductWrapper() {
-  const { currentUser } = useAuth();
+  const { currentUser } = useUser();
 
   if (currentUser?.contacts && currentUser?.contacts.length === 0) {
     return (
