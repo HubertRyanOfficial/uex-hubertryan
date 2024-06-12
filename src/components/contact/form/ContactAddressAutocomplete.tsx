@@ -33,6 +33,9 @@ function ContactAddressAutocomplete({ value, onChange }: Props) {
   useEffect(() => {
     if (debouncedAddress) {
       refetch();
+      setShowsCommandList(true);
+    } else if (!debouncedAddress) {
+      setShowsCommandList(false);
     }
   }, [debouncedAddress]);
 
@@ -52,10 +55,11 @@ function ContactAddressAutocomplete({ value, onChange }: Props) {
           value={value.address}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setShowsCommandList(true)}
+          onBlur={() => setShowsCommandList(false)}
           placeholder="Enter address details (e.g., street, city)."
         />
         {showsCommandList && (
-          <Command className="rounded-lg border shadow-md">
+          <Command className="rounded-lg border shadow-md mt-2">
             {data && (
               <CommandList>
                 {data.length === 0 && (
