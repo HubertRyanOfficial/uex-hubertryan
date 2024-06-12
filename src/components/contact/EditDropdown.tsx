@@ -9,11 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+
 import { EditDialogTrigger } from "./EditDialogTrigger";
 import { DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { useMaps } from "@/contexts/MapsContext";
 import type { FullContact } from "@/contexts/AuthContext/types";
 
 interface Props {
@@ -23,6 +25,7 @@ interface Props {
 export default function EditDropdown({ contact }: Props) {
   const { handleDeleteContact } = useAuth();
   const { toast } = useToast();
+  const { handleMapPosition } = useMaps();
 
   const [deleting, setDeleting] = useState(false);
 
@@ -36,6 +39,7 @@ export default function EditDropdown({ contact }: Props) {
         title: "Your Contact was deleted. 🗑️",
       });
       setDeleting(false);
+      handleMapPosition(null);
     }, 500);
   }, [contact, handleDeleteContact]);
 

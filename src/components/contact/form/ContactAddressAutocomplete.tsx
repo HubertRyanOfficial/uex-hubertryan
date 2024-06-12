@@ -14,6 +14,8 @@ import { useDebounce } from "@uidotdev/usehooks";
 
 import { getSuggestions } from "@/services/maps";
 import { ContactAddress } from "./types";
+import { X } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   value: ContactAddress;
@@ -51,12 +53,30 @@ function ContactAddressAutocomplete({ value, onChange }: Props) {
   return (
     <div className="w-full flex flex-col items-end pb-10">
       <div className="w-[86%]">
-        <Input
-          id="address"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          placeholder="Enter address details (e.g., street, city)."
-        />
+        {!value.address ? (
+          <Input
+            id="address"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            placeholder="Enter address details (e.g., street, city)."
+          />
+        ) : (
+          <div className="border-[1px] border-gray px-3 py-2 rounded-lg shadow-sm flex flex-row items-center justify-between hover:opacity-80 transition-opacity cursor-default">
+            <span className="text-sm">{`${value.address.slice(
+              0,
+              value.address.length - 10
+            )}...`}</span>
+            <div
+              role="button"
+              onClick={() => {
+                onChange("");
+                setSearchValue("");
+              }}
+            >
+              <X />
+            </div>
+          </div>
+        )}
         {showsCommandList && (
           <Command className="rounded-lg border shadow-md mt-2">
             {data && (
