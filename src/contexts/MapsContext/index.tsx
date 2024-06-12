@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useState } from "react";
 import { Map, Marker } from "@vis.gl/react-google-maps";
+import { motion } from "framer-motion";
 
 import { MapsContextHandles, Location } from "./types";
 
@@ -19,17 +20,21 @@ export default function MapsProvider({ children }: Props) {
   return (
     <MapsContext.Provider value={{ handleMapPosition }}>
       {location && (
-        <div className="flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-center rounded-xl"
+        >
           <Map
             center={{ lat: location.lat, lng: location.long }}
             defaultZoom={3}
             gestureHandling={"greedy"}
             disableDefaultUI={true}
-            className="w-[50vw] h-[20vh]"
+            className="w-[50vw] h-[20vh] rounded-xl"
           >
             <Marker position={{ lat: location.lat, lng: location.long }} />
           </Map>
-        </div>
+        </motion.div>
       )}
       {children}
     </MapsContext.Provider>
