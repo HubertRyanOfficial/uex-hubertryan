@@ -96,7 +96,7 @@ function ContactAddressForm({ value, onChange }: Props) {
         >
           <SelectTrigger
             disabled={isLoadingStates || isLoadingCep}
-            className="w-[154px]"
+            className="w-[131px]"
           >
             <SelectValue placeholder="State" />
           </SelectTrigger>
@@ -115,7 +115,7 @@ function ContactAddressForm({ value, onChange }: Props) {
         >
           <SelectTrigger
             disabled={!value.uf || isLoadingCities || isLoadingCep}
-            className="w-[154px]"
+            className="w-[131px]"
           >
             <SelectValue placeholder="City" />
           </SelectTrigger>

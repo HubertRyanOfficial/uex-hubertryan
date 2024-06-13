@@ -106,7 +106,7 @@ function ContactAddressAutocomplete({ value, onChange }: Props) {
 
   return (
     <div className="w-full flex flex-col items-end pb-4">
-      <div className="w-[86%]">
+      <div className="w-[74%]">
         {!value ? (
           <>
             <Input
