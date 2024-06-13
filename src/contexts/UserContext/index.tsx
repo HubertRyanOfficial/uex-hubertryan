@@ -197,10 +197,7 @@ export function AuthProvider({ children }: UserContextProps) {
         }
 
         let address: ContactForm["address"] = contact.address;
-        if (
-          !contact.address ||
-          (contact.address && !contact.address.description)
-        ) {
+        if (!contact.address) {
           const addressDescription = `${contact.city}, ${contact.uf}, Brazil`;
           const encodedAddress = encodeURIComponent(addressDescription);
           const location = await getLocationByAddress(encodedAddress); // Getting location by enconded address with city and uf
