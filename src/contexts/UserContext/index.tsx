@@ -21,6 +21,7 @@ import {
   UserCredentials,
 } from "./types";
 import { getLocationByAddress } from "@/services/maps";
+import { sortByName } from "@/lib/string";
 
 interface UserContextProps {
   children: React.ReactNode;
@@ -125,7 +126,7 @@ export function AuthProvider({ children }: UserContextProps) {
         return;
       }
       if (currentUser) {
-        const formatedCpf = data.cpf.replace(".", "").replace("-", "");
+        const formatedCpf = data.cpf.replace(/[.-]/g, "");
 
         // Checking if the new cpf number already exists in the user contacts list
         if (currentUser.contacts.find((cont) => cont.cpf === formatedCpf)) {
@@ -159,7 +160,7 @@ export function AuthProvider({ children }: UserContextProps) {
           created_at: dayjs().valueOf(),
         };
 
-        const newContacts = [...currentUser.contacts, newContact];
+        const newContacts = sortByName([...currentUser.contacts, newContact]);
         setCurrentUser({
           ...currentUser,
           contacts: newContacts,
@@ -217,7 +218,7 @@ export function AuthProvider({ children }: UserContextProps) {
         );
         let newContactList = [...currentUser.contacts];
 
-        const formatedCpf = contact.cpf.replace(".", "").replace("-", "");
+        const formatedCpf = contact.cpf.replace(/[.-]/g, "");
 
         newContactList[contactIndex] = {
           ...contact,
@@ -226,9 +227,11 @@ export function AuthProvider({ children }: UserContextProps) {
           created_at: dayjs().valueOf(),
         };
 
+        const reordenedList = sortByName(newContactList);
+
         setCurrentUser({
           ...currentUser,
-          contacts: newContactList,
+          contacts: reordenedList,
         });
       }
     },
