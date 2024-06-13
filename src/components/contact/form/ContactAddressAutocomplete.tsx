@@ -59,7 +59,7 @@ function ContactAddressAutocomplete({ value, onChange }: Props) {
 
         setPredictionResults(response.predictions);
       } catch (error) {
-        console.log(error);
+        alert(error);
       }
     },
     [autocompleteService, sessionToken]
@@ -107,7 +107,7 @@ function ContactAddressAutocomplete({ value, onChange }: Props) {
   return (
     <div className="w-full flex flex-col items-end pb-4">
       <div className="w-[74%]">
-        {!value ? (
+        {!value?.description ? (
           <>
             <Input
               value={inputValue}

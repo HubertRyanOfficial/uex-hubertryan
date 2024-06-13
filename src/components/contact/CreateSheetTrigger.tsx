@@ -81,7 +81,6 @@ export function CreateSheetTrigger({ children }: Props) {
       contactInfo.cpf &&
       contactInfo.name &&
       contactInfo.phone &&
-      contactAddress.address &&
       contactAddress.cep &&
       contactAddress.city &&
       contactAddress.uf,
@@ -96,7 +95,7 @@ export function CreateSheetTrigger({ children }: Props) {
         ...contactAddress,
       };
 
-      handleAddNewContact(contactData);
+      await handleAddNewContact(contactData);
       setOpen(false);
     } catch (error) {
       toast({

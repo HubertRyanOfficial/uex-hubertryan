@@ -265,7 +265,8 @@ export const columns: ColumnDef<FullContact>[] = [
     header: "Address",
     cell: ({ row }) => {
       const address: ContactForm["address"] = row.getValue("address");
-      const description = address?.description;
+      const description = address?.description || "Nenhum";
+
       return <div className="capitalize w-[200px]">{description}</div>;
     },
   },

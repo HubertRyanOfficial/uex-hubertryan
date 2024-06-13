@@ -20,6 +20,7 @@ import {
   User,
   UserCredentials,
 } from "./types";
+import { getLocationByAddress } from "@/services/maps";
 
 interface UserContextProps {
   children: React.ReactNode;
@@ -116,7 +117,7 @@ export function AuthProvider({ children }: UserContextProps) {
 
   // Creating a new contact and make cpf validation and address location
   const handleAddNewContact = useCallback(
-    (data: ContactForm) => {
+    async (data: ContactForm) => {
       if (!cpf.isValid(data.cpf)) {
         toast({
           title: "Formato do CPF inválido  ❌",
@@ -135,8 +136,25 @@ export function AuthProvider({ children }: UserContextProps) {
           return;
         }
 
+        let address: ContactForm["address"] = data.address;
+        if (!data.address) {
+          const encodedAddress = encodeURIComponent(
+            `${data.city}, ${data.uf}, Brazil`
+          );
+
+          const location = await getLocationByAddress(encodedAddress); // Getting location by enconded address with city and uf
+          const position = location[0].geometry;
+
+          address = {
+            description: "",
+            lat: Number(position.location.lat),
+            long: Number(position.location.lng),
+          };
+        }
+
         const newContact = {
           ...data,
+          address,
           cpf: formatedCpf,
           created_at: dayjs().valueOf(),
         };
@@ -155,7 +173,7 @@ export function AuthProvider({ children }: UserContextProps) {
 
   // Editing contact in array position updating the current User contact
   const handleEditContact = useCallback(
-    (contact: ContactForm, oldCPF: string) => {
+    async (contact: ContactForm, oldCPF: string) => {
       if (currentUser) {
         if (!cpf.isValid(contact.cpf)) {
           toast({
@@ -163,10 +181,6 @@ export function AuthProvider({ children }: UserContextProps) {
           });
           return;
         }
-
-        const contactIndex = currentUser.contacts.findIndex(
-          (cont) => cont.cpf === oldCPF
-        );
 
         // Checking if the cpf was changed and checking if the new cpf number already exists in the user contacts list
         if (
@@ -180,12 +194,34 @@ export function AuthProvider({ children }: UserContextProps) {
           return;
         }
 
+        let address: ContactForm["address"] = contact.address;
+        if (
+          !contact.address ||
+          (contact.address && !contact.address.description)
+        ) {
+          const encodedAddress = encodeURIComponent(
+            `${contact.city}, ${contact.uf}, Brazil`
+          );
+          const location = await getLocationByAddress(encodedAddress); // Getting location by enconded address with city and uf
+          const position = location[0].geometry;
+
+          address = {
+            description: "",
+            lat: Number(position.location.lat),
+            long: Number(position.location.lng),
+          };
+        }
+
+        const contactIndex = currentUser.contacts.findIndex(
+          (cont) => cont.cpf === oldCPF
+        );
         let newContactList = [...currentUser.contacts];
 
         const formatedCpf = contact.cpf.replace(".", "").replace("-", "");
 
         newContactList[contactIndex] = {
           ...contact,
+          address,
           cpf: formatedCpf,
           created_at: dayjs().valueOf(),
         };

@@ -84,7 +84,6 @@ function EditDialogTrigger({ children, contact }: Props) {
       contactInfo.cpf &&
       contactInfo.name &&
       contactInfo.phone &&
-      contactAddress.address &&
       contactAddress.cep &&
       contactAddress.city &&
       contactAddress.uf,
@@ -99,7 +98,7 @@ function EditDialogTrigger({ children, contact }: Props) {
         ...contactAddress,
       };
 
-      handleEditContact(contactData, contact.cpf);
+      await handleEditContact(contactData, contact.cpf);
       setOpen(false);
     } catch (error) {
       toast({
