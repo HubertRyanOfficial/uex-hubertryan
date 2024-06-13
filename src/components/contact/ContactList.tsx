@@ -270,6 +270,13 @@ export const columns: ColumnDef<FullContact>[] = [
     },
   },
   {
+    accessorKey: "cep",
+    header: "CEP",
+    cell: ({ row }) => (
+      <div className="capitalize w-[200px]">{row.getValue("cep")}</div>
+    ),
+  },
+  {
     accessorKey: "phone",
     header: "Phone number",
     cell: ({ row }) => (

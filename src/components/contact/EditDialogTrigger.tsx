@@ -99,7 +99,7 @@ function EditDialogTrigger({ children, contact }: Props) {
         ...contactAddress,
       };
 
-      await handleEditContact(contactData);
+      await handleEditContact(contactData, contact.cpf);
       setOpen(false);
     } catch (error) {
       toast({

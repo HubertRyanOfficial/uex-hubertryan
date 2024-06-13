@@ -20,7 +20,6 @@ import {
   User,
   UserCredentials,
 } from "./types";
-import { getLocationByAddress } from "@/services/maps";
 
 interface UserContextProps {
   children: React.ReactNode;
@@ -127,6 +126,7 @@ export function AuthProvider({ children }: UserContextProps) {
       if (currentUser) {
         const formatedCpf = data.cpf.replace(".", "").replace("-", "");
 
+        // Checking if the new cpf number already exists in the user contacts list
         if (currentUser.contacts.find((cont) => cont.cpf === formatedCpf)) {
           toast({
             title: "Esse CPF já existe",
@@ -155,7 +155,7 @@ export function AuthProvider({ children }: UserContextProps) {
 
   // Editing contact in array position updating the current User contact
   const handleEditContact = useCallback(
-    async (contact: ContactForm) => {
+    async (contact: ContactForm, oldCPF: string) => {
       if (currentUser) {
         if (!cpf.isValid(contact.cpf)) {
           toast({
@@ -165,8 +165,20 @@ export function AuthProvider({ children }: UserContextProps) {
         }
 
         const contactIndex = currentUser.contacts.findIndex(
-          (cont) => cont.cpf === contact.cpf
+          (cont) => cont.cpf === oldCPF
         );
+
+        // Checking if the cpf was changed and checking if the new cpf number already exists in the user contacts list
+        if (
+          contact.cpf !== oldCPF &&
+          currentUser.contacts.find((cont) => cont.cpf === contact.cpf)
+        ) {
+          toast({
+            title: "Esse CPF já existe",
+            description: "CPF sendo usado por outro contato.",
+          });
+          return;
+        }
 
         let newContactList = [...currentUser.contacts];
 
