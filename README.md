@@ -54,7 +54,7 @@ To simulate a database, I use **local storage** to store, persist and update you
 
 ### Google Maps API
 
-3. In this project, I'm using **Google Maps APIs**, specifically the **Places API (Legacy)** and **Geocode**, to ensure the application's functionalities work correctly. Therefore, before proceeding to the third step, you need to create a new google cloud project and activating these services in your **Google Cloud** account by accessing [this link]('https://console.cloud.google.com/google/maps-apis/api-list') and obtaining your API key.
+3. In this project, I'm using **Google Maps APIs**, specifically the **Places API (Legacy)** and **Geocode**, to ensure the application's functionalities work correctly. Therefore, before proceeding to the third step, you need to create a new google cloud project and activating these services in your **Google Cloud** account by accessing [this link](https://console.cloud.google.com/google/maps-apis/api-list) and obtaining your API key.
 
    To be able to add your credentials you can follow the example of the env file found in the root `.env.example` and replace it with your real `.env` as explained below:
 
