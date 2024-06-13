@@ -110,10 +110,12 @@ export function AuthProvider({ children }: UserContextProps) {
     );
     const newUsersList = users.filter((_, i) => i !== currentUserIndex);
     setUsers(newUsersList);
-    clearCurrentUser();
-    toast({
-      title: "Account deleted successly",
-    });
+    setTimeout(() => {
+      setCurrentUser(null);
+      toast({
+        title: "Account deleted successly",
+      });
+    }, 500);
   }, [currentUser, users, clearCurrentUser]);
 
   // Creating a new contact and make cpf validation and address location
@@ -139,15 +141,14 @@ export function AuthProvider({ children }: UserContextProps) {
 
         let address: ContactForm["address"] = data.address;
         if (!data.address) {
-          const encodedAddress = encodeURIComponent(
-            `${data.city}, ${data.uf}, Brazil`
-          );
+          const addressDescription = `${data.city}, ${data.uf}, Brazil`;
+          const encodedAddress = encodeURIComponent(addressDescription);
 
           const location = await getLocationByAddress(encodedAddress); // Getting location by enconded address with city and uf
           const position = location[0].geometry;
 
           address = {
-            description: "",
+            description: addressDescription,
             lat: Number(position.location.lat),
             long: Number(position.location.lng),
           };
@@ -200,14 +201,13 @@ export function AuthProvider({ children }: UserContextProps) {
           !contact.address ||
           (contact.address && !contact.address.description)
         ) {
-          const encodedAddress = encodeURIComponent(
-            `${contact.city}, ${contact.uf}, Brazil`
-          );
+          const addressDescription = `${contact.city}, ${contact.uf}, Brazil`;
+          const encodedAddress = encodeURIComponent(addressDescription);
           const location = await getLocationByAddress(encodedAddress); // Getting location by enconded address with city and uf
           const position = location[0].geometry;
 
           address = {
-            description: "",
+            description: addressDescription,
             lat: Number(position.location.lat),
             long: Number(position.location.lng),
           };
