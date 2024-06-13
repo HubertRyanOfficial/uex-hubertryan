@@ -5,7 +5,7 @@ import { CreateSheetTrigger } from "./CreateSheetTrigger";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/contexts/UserContext";
 
-export default function ProductWrapper() {
+export default function ContactWrapper() {
   const { currentUser } = useUser();
 
   if (currentUser?.contacts && currentUser?.contacts.length === 0) {
