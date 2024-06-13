@@ -33,8 +33,8 @@ interface UserContextHandles {
   handleLogin: (credentials: UserCredentials) => void;
   handleSignOut: () => void;
   handleDeleteAccount: () => void;
-  handleAddNewContact: (contact: ContactForm) => Promise<void>;
-  handleEditContact: (contact: ContactForm, oldCPF: string) => Promise<void>;
+  handleAddNewContact: (contact: ContactForm) => void;
+  handleEditContact: (contact: ContactForm, oldCPF: string) => void;
   handleDeleteContact: (contact: FullContact) => void;
 }
 

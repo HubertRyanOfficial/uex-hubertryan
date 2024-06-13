@@ -96,7 +96,7 @@ export function CreateSheetTrigger({ children }: Props) {
         ...contactAddress,
       };
 
-      await handleAddNewContact(contactData);
+      handleAddNewContact(contactData);
       setOpen(false);
     } catch (error) {
       toast({

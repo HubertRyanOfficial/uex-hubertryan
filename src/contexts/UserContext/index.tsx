@@ -78,7 +78,7 @@ export function AuthProvider({ children }: UserContextProps) {
 
   // Log in the user in the service with e-mail and password
   const handleLogin = useCallback(
-    async (credentials: UserCredentials) => {
+    (credentials: UserCredentials) => {
       const findUserWithEmail = users.find(
         (user) => user.email === credentials.email
       );
@@ -116,7 +116,7 @@ export function AuthProvider({ children }: UserContextProps) {
 
   // Creating a new contact and make cpf validation and address location
   const handleAddNewContact = useCallback(
-    async (data: ContactForm) => {
+    (data: ContactForm) => {
       if (!cpf.isValid(data.cpf)) {
         toast({
           title: "Formato do CPF inválido  ❌",
@@ -155,7 +155,7 @@ export function AuthProvider({ children }: UserContextProps) {
 
   // Editing contact in array position updating the current User contact
   const handleEditContact = useCallback(
-    async (contact: ContactForm, oldCPF: string) => {
+    (contact: ContactForm, oldCPF: string) => {
       if (currentUser) {
         if (!cpf.isValid(contact.cpf)) {
           toast({
