@@ -113,9 +113,7 @@ export function CreateSheetTrigger({ children }: Props) {
       <SheetContent className="sm:max-w-[425px]">
         <SheetHeader>
           <SheetTitle>Create contact</SheetTitle>
-          <SheetDescription>
-            Create your new contact here. Click save when you're done.
-          </SheetDescription>
+          <SheetDescription>Create your new contact here.</SheetDescription>
         </SheetHeader>
         <ContactInfoForm value={contactInfo} onChange={handleContactInfo} />
         <ContactAddressForm

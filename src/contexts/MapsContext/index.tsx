@@ -20,8 +20,8 @@ export default function MapsProvider({ children }: Props) {
   return (
     <MapsContext.Provider value={{ handleMapPosition }}>
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, marginTop: location ? 10 : 0 }}
+        animate={{ opacity: location ? 1 : 0, marginTop: location ? 0 : -100 }}
         className="flex items-center justify-center rounded-xl"
       >
         <Map

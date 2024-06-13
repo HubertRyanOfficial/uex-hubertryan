@@ -14,7 +14,7 @@ export default function Header() {
   const { handleSignOut, handleDeleteAccount, currentUser } = useUser();
 
   return (
-    <header className="bg-white h-[6vh] px-8 flex flex-row items-center justify-end shadow-sm ">
+    <header className="bg-white h-[6vh] px-8 flex flex-row items-center justify-end shadow-sm z-[1]">
       <div className="flex items-center">
         <DropdownMenu>
           <DropdownMenuTrigger>

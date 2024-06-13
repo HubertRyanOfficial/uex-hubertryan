@@ -7,7 +7,7 @@ export default function Dashboard() {
     <div className="w-full min-h-[100vh] flex flex-col bg-gray-50">
       <Header />
       <MapsProvider>
-        <main className="w-full h-[94vh] flex flex-col justify-center items-center">
+        <main className="w-full h-[74vh] flex flex-col justify-center items-center">
           <ContactWrapper />
         </main>
       </MapsProvider>

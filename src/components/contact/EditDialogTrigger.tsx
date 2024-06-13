@@ -116,9 +116,7 @@ function EditDialogTrigger({ children, contact }: Props) {
       <SheetContent className="sm:max-w-[425px]">
         <SheetHeader>
           <SheetTitle>Edit contact</SheetTitle>
-          <SheetDescription>
-            Edit your contact here. Click save when you're done.
-          </SheetDescription>
+          <SheetDescription>Edit your contact here.</SheetDescription>
         </SheetHeader>
         <ContactInfoForm value={contactInfo} onChange={handleContactInfo} />
         <ContactAddressForm
