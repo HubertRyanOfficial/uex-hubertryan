@@ -15,7 +15,7 @@ export default function ProductWrapper() {
         <div className="mt-8">
           <CreateSheetTrigger>
             <Button>
-              <PlusIcon className="mr-2" /> Create Contact
+              <PlusIcon className="mr-2" /> Create contact
             </Button>
           </CreateSheetTrigger>
         </div>
