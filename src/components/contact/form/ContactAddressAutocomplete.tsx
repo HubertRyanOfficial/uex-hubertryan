@@ -1,105 +1,160 @@
-import { memo, useCallback, useEffect, useState } from "react";
+import { FormEvent, memo, useCallback, useEffect, useState } from "react";
 
 import {
   Command,
-  CommandEmpty,
   CommandGroup,
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 
-import { useQuery } from "@tanstack/react-query";
-import { useDebounce } from "@uidotdev/usehooks";
-
-import { getSuggestions } from "@/services/maps";
-import { ContactAddress } from "./types";
+import { ContactAddress } from "../types";
+import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 import { X } from "lucide-react";
 
 interface Props {
-  value: ContactAddress;
-  onChange: (e: string) => void;
+  value: ContactAddress["address"];
+  onChange: (e: ContactAddress["address"]) => void;
 }
 
 function ContactAddressAutocomplete({ value, onChange }: Props) {
-  const [searchValue, setSearchValue] = useState(value.address);
-  const debouncedAddress = useDebounce(searchValue, 500);
-  const [showsCommandList, setShowsCommandList] = useState(false);
+  const map = useMap();
+  const places = useMapsLibrary("places");
 
-  const { data, refetch } = useQuery({
-    queryKey: ["address", value],
-    queryFn: () => getSuggestions(value),
-    enabled: false,
-  });
+  const [sessionToken, setSessionToken] =
+    useState<google.maps.places.AutocompleteSessionToken>();
 
+  const [placesService, setPlacesService] =
+    useState<google.maps.places.PlacesService | null>(null);
+
+  const [autocompleteService, setAutocompleteService] =
+    useState<google.maps.places.AutocompleteService | null>(null);
+
+  const [predictionResults, setPredictionResults] = useState<
+    Array<google.maps.places.AutocompletePrediction>
+  >([]);
+
+  const [inputValue, setInputValue] = useState<string>("");
+
+  // starting the services creating a new custom session
   useEffect(() => {
-    if (debouncedAddress) {
-      refetch();
-      setShowsCommandList(true);
-    } else if (!debouncedAddress) {
-      setShowsCommandList(false);
-    }
-  }, [debouncedAddress]);
+    if (!places || !map) return;
 
-  const handleChooseAddress = useCallback(
-    (addressSelected: string) => {
-      onChange(addressSelected);
-      setShowsCommandList(false);
+    setAutocompleteService(new places.AutocompleteService());
+    setPlacesService(new places.PlacesService(map));
+    setSessionToken(new places.AutocompleteSessionToken());
+  }, [places, map]);
+
+  // get predictions with the autocomplete service
+  const fetchPredictions = useCallback(
+    async (newInputValue: string) => {
+      try {
+        if (!autocompleteService || !newInputValue) {
+          setPredictionResults([]);
+          return;
+        }
+
+        const request = { input: newInputValue, sessionToken };
+        const response = await autocompleteService.getPlacePredictions(request);
+
+        setPredictionResults(response.predictions);
+      } catch (error) {
+        console.log(error);
+      }
     },
-    [onChange, searchValue]
+    [autocompleteService, sessionToken]
+  );
+
+  // fetching predictions and saving input value
+  const onInputChange = useCallback(
+    (event: FormEvent<HTMLInputElement>) => {
+      const value = (event.target as HTMLInputElement)?.value;
+
+      setInputValue(value);
+      fetchPredictions(value);
+    },
+    [fetchPredictions]
+  );
+
+  // handle when a suggestion is cliked
+  const handleSuggestionClick = useCallback(
+    (placeId: string) => {
+      if (!places) return;
+      const detailRequestOptions = {
+        placeId,
+        fields: ["geometry", "name", "formatted_address"],
+        sessionToken,
+      };
+
+      const detailsRequestCallback = (
+        placeDetails: google.maps.places.PlaceResult | null
+      ) => {
+        onChange({
+          description: placeDetails?.formatted_address ?? "",
+          lat: placeDetails?.geometry?.location?.lat() ?? 0,
+          long: placeDetails?.geometry?.location?.lng() ?? 0,
+        });
+        setPredictionResults([]);
+        setInputValue(placeDetails?.formatted_address ?? "");
+        setSessionToken(new places.AutocompleteSessionToken());
+      };
+
+      placesService?.getDetails(detailRequestOptions, detailsRequestCallback);
+    },
+    [places, sessionToken]
   );
 
   return (
-    <div className="w-full flex flex-col items-end pb-10">
+    <div className="w-full flex flex-col items-end pb-4">
       <div className="w-[86%]">
-        {!value.address ? (
-          <Input
-            id="address"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            placeholder="Enter address details (e.g., street, city)."
-          />
+        {!value ? (
+          <>
+            <Input
+              value={inputValue}
+              placeholder="Search for a place"
+              onInput={(event: FormEvent<HTMLInputElement>) =>
+                onInputChange(event)
+              }
+            />
+            <Command>
+              <CommandList>
+                <CommandGroup>
+                  {predictionResults.length > 0 && (
+                    <ul>
+                      {predictionResults.map(({ place_id, description }) => {
+                        return (
+                          <CommandItem>
+                            <li
+                              className="cursor-pointer"
+                              key={place_id}
+                              onClick={() => handleSuggestionClick(place_id)}
+                            >
+                              {description}
+                            </li>
+                          </CommandItem>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </>
         ) : (
           <div className="border-[1px] border-gray px-3 py-2 rounded-lg shadow-sm flex flex-row items-center justify-between hover:opacity-80 transition-opacity cursor-default">
-            <span className="text-sm">{`${value.address.slice(
+            <span className="text-sm">{`${value.description.slice(
               0,
-              value.address.length - 10
+              value.description.length - 10
             )}...`}</span>
             <div
               role="button"
               onClick={() => {
-                onChange("");
-                setSearchValue("");
+                onChange(null);
               }}
             >
               <X />
             </div>
           </div>
-        )}
-        {showsCommandList && (
-          <Command className="rounded-lg border shadow-md mt-2">
-            {data && (
-              <CommandList>
-                {data.length === 0 && (
-                  <CommandEmpty>No results found.</CommandEmpty>
-                )}
-                {data.length > 0 && (
-                  <CommandGroup heading="Suggestions">
-                    {data.map((address) => (
-                      <div
-                        role="button"
-                        onClick={() => handleChooseAddress(address.description)}
-                      >
-                        <CommandItem key={address.place_id}>
-                          <span>{address.description}</span>
-                        </CommandItem>
-                      </div>
-                    ))}
-                  </CommandGroup>
-                )}
-              </CommandList>
-            )}
-          </Command>
         )}
       </div>
     </div>

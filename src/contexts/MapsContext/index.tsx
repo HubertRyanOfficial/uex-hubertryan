@@ -19,23 +19,29 @@ export default function MapsProvider({ children }: Props) {
 
   return (
     <MapsContext.Provider value={{ handleMapPosition }}>
-      {location && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-center rounded-xl"
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-center rounded-xl"
+      >
+        <Map
+          center={{
+            lat: location ? location.lat : 0,
+            lng: location ? location.long : 0,
+          }}
+          defaultZoom={3}
+          gestureHandling={"greedy"}
+          disableDefaultUI={true}
+          className="w-[50vw] h-[20vh] rounded-xl"
         >
-          <Map
-            center={{ lat: location.lat, lng: location.long }}
-            defaultZoom={3}
-            gestureHandling={"greedy"}
-            disableDefaultUI={true}
-            className="w-[50vw] h-[20vh] rounded-xl"
-          >
-            <Marker position={{ lat: location.lat, lng: location.long }} />
-          </Map>
-        </motion.div>
-      )}
+          <Marker
+            position={{
+              lat: location ? location.lat : 0,
+              lng: location ? location.long : 0,
+            }}
+          />
+        </Map>
+      </motion.div>
       {children}
     </MapsContext.Provider>
   );

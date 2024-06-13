@@ -19,11 +19,14 @@ import type { Cep, Districits, State } from "@/services/address/types";
 import { useToast } from "@/components/ui/use-toast";
 
 import ContactAddressAutocomplete from "./ContactAddressAutocomplete";
-import type { ContactAddress } from "./types";
+import type { ContactAddress } from "../types";
 
 interface Props {
   value: ContactAddress;
-  onChange: (name: keyof ContactAddress, value: string) => void;
+  onChange: (
+    name: keyof ContactAddress,
+    value: string | ContactAddress["address"]
+  ) => void;
 }
 
 function ContactAddressForm({ value, onChange }: Props) {
@@ -127,7 +130,7 @@ function ContactAddressForm({ value, onChange }: Props) {
         </Select>
       </div>
       <ContactAddressAutocomplete
-        value={value}
+        value={value.address}
         onChange={(value) => onChange("address", value)}
       />
     </div>

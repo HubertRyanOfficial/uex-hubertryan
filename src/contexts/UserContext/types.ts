@@ -10,15 +10,15 @@ export interface ContactForm {
   cep: string;
   uf: string;
   city: string;
-  address: string;
+  address: {
+    description: string;
+    lat: number;
+    long: number;
+  } | null;
 }
 
 export interface FullContact extends ContactForm {
   created_at: number;
-  location: {
-    lat: number;
-    long: number;
-  };
 }
 export interface User extends UserCredentials {
   contacts: FullContact[];

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sheet";
 import ContactInfoForm from "./form/ContactInfoForm";
 import ContactAddressForm from "./form/ContactAddressForm";
-import { ContactAddress, ContactInfo } from "./form/types";
+import { ContactAddress, ContactInfo } from "./types";
 
 import { useUser } from "@/contexts/UserContext";
 import { useToast } from "../ui/use-toast";
@@ -29,16 +29,16 @@ export function CreateSheetTrigger({ children }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [contactInfo, setContactInfo] = useState({
+  const [contactInfo, setContactInfo] = useState<ContactInfo>({
     name: "",
     cpf: "",
     phone: "",
   });
-  const [contactAddress, setContactAddress] = useState({
+  const [contactAddress, setContactAddress] = useState<ContactAddress>({
     cep: "",
     uf: "",
     city: "",
-    address: "",
+    address: null,
   });
 
   const handleContactInfo = useCallback(
@@ -54,8 +54,8 @@ export function CreateSheetTrigger({ children }: Props) {
   );
 
   const handleContactAddress = useCallback(
-    (name: keyof ContactAddress, value: string) => {
-      if (name === "cep") {
+    (name: keyof ContactAddress, value: string | ContactAddress["address"]) => {
+      if (name === "cep" && typeof value === "string") {
         const formatedCep = value.replace(/[.\- ]/g, "");
         setContactAddress((prev) => {
           return {

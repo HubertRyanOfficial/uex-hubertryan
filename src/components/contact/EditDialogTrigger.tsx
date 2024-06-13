@@ -15,7 +15,7 @@ import {
 } from "../ui/sheet";
 import ContactInfoForm from "./form/ContactInfoForm";
 import ContactAddressForm from "./form/ContactAddressForm";
-import { ContactAddress, ContactInfo } from "./form/types";
+import { ContactAddress, ContactInfo } from "./types";
 
 import { useUser } from "@/contexts/UserContext";
 import { useToast } from "@/components/ui/use-toast";
@@ -32,16 +32,16 @@ function EditDialogTrigger({ children, contact }: Props) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const [contactInfo, setContactInfo] = useState({
+  const [contactInfo, setContactInfo] = useState<ContactInfo>({
     name: contact.name || "",
     cpf: contact.cpf || "",
     phone: contact.phone || "",
   });
-  const [contactAddress, setContactAddress] = useState({
+  const [contactAddress, setContactAddress] = useState<ContactAddress>({
     cep: contact.cep || "",
     uf: contact.uf || "",
     city: contact.city || "",
-    address: contact.address || "",
+    address: contact.address || null,
   });
 
   const handleContactInfo = useCallback(
@@ -57,8 +57,8 @@ function EditDialogTrigger({ children, contact }: Props) {
   );
 
   const handleContactAddress = useCallback(
-    (name: keyof ContactAddress, value: string) => {
-      if (name === "cep") {
+    (name: keyof ContactAddress, value: string | ContactAddress["address"]) => {
+      if (name === "cep" && value === "string") {
         const formatedCep = value.replace(/[.\- ]/g, "");
         setContactAddress((prev) => {
           return {

@@ -7,5 +7,9 @@ export interface ContactAddress {
   cep: string;
   uf: string;
   city: string;
-  address: string;
+  address: {
+    description: string;
+    lat: number;
+    long: number;
+  } | null;
 }

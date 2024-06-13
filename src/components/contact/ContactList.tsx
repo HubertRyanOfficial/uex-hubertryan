@@ -42,7 +42,7 @@ import EditDropdown from "./EditDropdown";
 
 import { useUser } from "@/contexts/UserContext";
 import { useMaps } from "@/contexts/MapsContext";
-import { FullContact } from "@/contexts/UserContext/types";
+import type { ContactForm, FullContact } from "@/contexts/UserContext/types";
 
 export default function ContentsList() {
   const { currentUser } = useUser();
@@ -99,7 +99,10 @@ export default function ContentsList() {
       if (currentUser) {
         const contactSelected = currentUser.contacts[indexSelected];
         if (contactSelected) {
-          handleMapPosition(contactSelected.location);
+          handleMapPosition({
+            lat: contactSelected.address?.lat ?? 0,
+            long: contactSelected.address?.long ?? 0,
+          });
         }
       }
     } else {
@@ -260,9 +263,11 @@ export const columns: ColumnDef<FullContact>[] = [
   {
     accessorKey: "address",
     header: "Address",
-    cell: ({ row }) => (
-      <div className="capitalize w-[200px]">{row.getValue("address")}</div>
-    ),
+    cell: ({ row }) => {
+      const address: ContactForm["address"] = row.getValue("address");
+      const description = address?.description;
+      return <div className="capitalize w-[200px]">{description}</div>;
+    },
   },
   {
     accessorKey: "phone",

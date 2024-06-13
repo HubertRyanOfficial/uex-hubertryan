@@ -135,20 +135,10 @@ export function AuthProvider({ children }: UserContextProps) {
           return;
         }
 
-        const address = `${data.city}, ${data.uf}, Brazil`;
-        const encodedAddress = encodeURIComponent(address);
-
-        const location = await getLocationByAddress(encodedAddress); // Getting location by enconded address with city and uf
-        const position = location[0].geometry;
-
         const newContact = {
           ...data,
           cpf: formatedCpf,
           created_at: dayjs().valueOf(),
-          location: {
-            lat: Number(position.location.lat),
-            long: Number(position.location.lng),
-          },
         };
 
         const newContacts = [...currentUser.contacts, newContact];
@@ -180,33 +170,12 @@ export function AuthProvider({ children }: UserContextProps) {
 
         let newContactList = [...currentUser.contacts];
 
-        let location;
-
-        if (
-          newContactList[contactIndex] &&
-          contact.address !== newContactList[contactIndex].address
-        ) {
-          const address = `${contact.city}, ${contact.uf}, Brazil`;
-          const encodedAddress = encodeURIComponent(address);
-
-          const newLocation = await getLocationByAddress(encodedAddress);
-          const position = newLocation[0].geometry;
-
-          location = {
-            lat: Number(position.location.lat),
-            long: Number(position.location.lng),
-          };
-        } else {
-          location = newContactList[contactIndex].location;
-        }
-
         const formatedCpf = contact.cpf.replace(".", "").replace("-", "");
 
         newContactList[contactIndex] = {
           ...contact,
-          created_at: dayjs().valueOf(),
           cpf: formatedCpf,
-          location,
+          created_at: dayjs().valueOf(),
         };
 
         setCurrentUser({

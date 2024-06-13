@@ -1,7 +1,7 @@
 import { Label } from "../../ui/label";
 import { Input } from "../../ui/input";
 
-import type { ContactInfo } from "./types";
+import type { ContactInfo } from "../types";
 
 interface Props {
   value: ContactInfo;
